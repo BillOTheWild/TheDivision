@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Division 2 — Recombinant Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --off: #e84040;
+  --off-dim: #7a1a1a;
+  --off-bg: #1a0808;
+  --off-glow: rgba(232,64,64,0.15);
+  --def: #4a9edd;
+  --def-dim: #1a4a7a;
+  --def-bg: #080f1a;
+  --def-glow: rgba(74,158,221,0.15);
+  --util: #f0a500;
+  --util-dim: #7a5000;
+  --util-bg: #1a1000;
+  --util-glow: rgba(240,165,0,0.15);
+  --bg: #0a0a0a;
+  --bg2: #111111;
+  --bg3: #181818;
+  --border: #2a2a2a;
+  --border2: #333;
+  --text: #d0c8b8;
+  --text-dim: #666;
+  --text-muted: #444;
+  --accent: #f0a500;
+  --font-ui: 'Rajdhani', sans-serif;
+  --font-mono: 'Share Tech Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 15px;
+  min-height: 100vh;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.015) 39px, rgba(255,255,255,0.015) 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.015) 39px, rgba(255,255,255,0.015) 40px);
+}
+
+.app {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border2);
+  position: relative;
+}
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 120px;
+  height: 1px;
+  background: var(--accent);
+}
+.header-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--bg3);
+  border: 1px solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  flex-shrink: 0;
+}
+.header-icon svg { width: 28px; height: 28px; fill: var(--accent); }
+.header-title { flex: 1; }
+.header-title h1 {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  line-height: 1;
+}
+.header-title p {
+  font-size: 12px;
+  color: var(--text-dim);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-top: 4px;
+  font-family: var(--font-mono);
+}
+.base-display {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--accent);
+  background: var(--bg3);
+  border: 1px solid var(--util-dim);
+  padding: 6px 12px;
+  text-align: right;
+  line-height: 1.5;
+}
+.base-display span { display: block; color: var(--text-dim); font-size: 11px; }
+
+/* SECTION */
+.section { margin-bottom: 24px; }
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(240,165,0,0.07);
+  border: 1px solid rgba(240,165,0,0.25);
+  padding: 6px 10px;
+}
+.section-label::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 14px;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+/* PANEL */
+.panel {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  padding: 16px;
+  position: relative;
+}
+.panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 40px; height: 2px;
+  background: var(--accent);
+}
+
+/* ACTIVES GRID */
+.actives-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.active-cell { display: flex; flex-direction: column; gap: 6px; }
+.active-cell-name {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-family: var(--font-mono);
+}
+
+/* SELECTS */
+select {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 7px 10px;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+  transition: border-color 0.15s;
+}
+select:hover { border-color: var(--accent); }
+select:focus { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+select option { background: #1a1a1a; }
+
+/* EQUIPPED ROW */
+.equipped-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: start;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.equipped-note {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 6px;
+  min-height: 14px;
+  line-height: 1.5;
+}
+.equipped-note em { color: var(--accent); font-style: normal; }
+
+/* PASSIVES */
+.passive-slots { display: flex; flex-direction: column; gap: 0; }
+.passive-slot {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 10px;
+  align-items: start;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.passive-slot:last-child { border-bottom: none; }
+.slot-num {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-muted);
+  padding-top: 7px;
+  text-align: center;
+  line-height: 1;
+}
+.passive-desc {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 5px;
+  min-height: 14px;
+  line-height: 1.5;
+}
+
+/* NOTICES */
+.notices { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+.notice {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 8px 10px;
+  border-left: 2px solid;
+  display: none;
+  line-height: 1.5;
+}
+.notice.warn { border-color: var(--off); background: rgba(232,64,64,0.06); color: #e88080; }
+.notice.info { border-color: var(--def); background: rgba(74,158,221,0.06); color: #88b8dd; }
+.notice.gold { border-color: var(--util); background: rgba(240,165,0,0.06); color: #d4a040; }
+
+/* RESULTS */
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.module-card {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  padding: 16px 14px 14px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.module-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+.module-card.offense { border-top: 2px solid var(--off); }
+.module-card.offense::after { background: var(--off-glow); }
+.module-card.defense { border-top: 2px solid var(--def); }
+.module-card.defense::after { background: var(--def-glow); }
+.module-card.utility { border-top: 2px solid var(--util); }
+.module-card.utility::after { background: var(--util-glow); }
+.module-card.active-glow::after { opacity: 1; }
+
+.mod-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.mod-name {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+}
+.offense .mod-name { color: var(--off); }
+.defense .mod-name { color: var(--def); }
+.utility .mod-name { color: var(--util); }
+
+.mod-lock {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 1px 6px;
+  border: 1px solid;
+  display: none;
+}
+.offense .mod-lock { border-color: var(--off-dim); color: var(--off); }
+.defense .mod-lock { border-color: var(--def-dim); color: var(--def); }
+.utility .mod-lock { border-color: var(--util-dim); color: var(--util); }
+.mod-lock.visible { display: block; }
+
+.mod-stacks {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.mod-value {
+  font-size: 52px;
+  font-weight: 700;
+  line-height: 1;
+  font-family: var(--font-mono);
+  transition: color 0.2s;
+}
+.offense .mod-value { color: var(--off); }
+.defense .mod-value { color: var(--def); }
+.utility .mod-value { color: var(--util); }
+.mod-card-disabled .mod-value { color: var(--text-muted) !important; text-decoration: line-through; }
+
+.mod-base {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.mod-potency {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  margin-bottom: 8px;
+  min-height: 14px;
+}
+.offense .mod-potency { color: var(--off); }
+.defense .mod-potency { color: var(--def); }
+.utility .mod-potency { color: var(--util); }
+
+.mod-stat {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  min-height: 18px;
+}
+.mod-stat-pct {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 4px;
+}
+.offense .mod-stat-pct { color: var(--off); }
+.defense .mod-stat-pct { color: var(--def); }
+.utility .mod-stat-pct { color: var(--util); }
+.mod-card-disabled .mod-stat,
+.mod-card-disabled .mod-stat-pct { color: var(--text-muted) !important; }
+
+.mod-rate {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* BARS */
+.bars { display: flex; flex-direction: column; gap: 8px; }
+.bar-row { display: flex; align-items: center; gap: 10px; }
+.bar-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  width: 72px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.bar-label.off { color: var(--off); }
+.bar-label.def { color: var(--def); }
+.bar-label.util { color: var(--util); }
+.bar-track {
+  flex: 1;
+  height: 6px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  transition: width 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+.bar-fill.off { background: var(--off); }
+.bar-fill.def { background: var(--def); }
+.bar-fill.util { background: var(--util); }
+.bar-pct {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  width: 36px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.footer {
+  margin-top: 32px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+.footer-main {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+}
+.footer-credit {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 4px;
+  letter-spacing: 0.06em;
+}
+.footer-credit span {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .actives-grid { grid-template-columns: 1fr; }
+  .results-grid { grid-template-columns: 1fr; }
+  .mod-value { font-size: 40px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="header-icon">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.18L20 8.5v7L12 19.82 4 15.5v-7L12 4.18zM12 7a5 5 0 100 10A5 5 0 0012 7zm0 2a3 3 0 110 6 3 3 0 010-6z"/>
+      </svg>
+    </div>
+    <div class="header-title">
+      <h1>Recombinant Calculator</h1>
+      <p>The Division 2 — Year 8 Season 1 · Rise Up</p>
+    </div>
+    <div class="base-display" id="base-display">
+      8 / 8 / 8
+      <span>BASE STACKS</span>
+    </div>
+  </div>
+
+  <!-- ACTIVE MODIFIERS -->
+  <div class="section">
+    <div class="section-label">Active Modifiers — stack bonuses stack from all three</div>
+    <div class="panel">
+      <div class="actives-grid">
+        <div class="active-cell">
+          <div class="active-cell-name">Blackout Pulse</div>
+          <select id="lv-blackout">
+            <option value="0">Not unlocked</option>
+            <option value="1">Level 1 · +0</option>
+            <option value="2">Level 2 · +1</option>
+            <option value="3">Level 3 · +2</option>
+            <option value="4">Level 4 · +3</option>
+            <option value="5">Level 5 · +4</option>
+          </select>
+        </div>
+        <div class="active-cell">
+          <div class="active-cell-name">Cloud Armor</div>
+          <select id="lv-cloud">
+            <option value="0">Not unlocked</option>
+            <option value="1">Level 1 · +0</option>
+            <option value="2">Level 2 · +1</option>
+            <option value="3">Level 3 · +2</option>
+            <option value="4">Level 4 · +3</option>
+            <option value="5">Level 5 · +4</option>
+          </select>
+        </div>
+        <div class="active-cell">
+          <div class="active-cell-name">Optimize / Overload</div>
+          <select id="lv-optimize">
+            <option value="0">Not unlocked</option>
+            <option value="1">Level 1 · +0</option>
+            <option value="2">Level 2 · +1</option>
+            <option value="3">Level 3 · +2</option>
+            <option value="4">Level 4 · +3</option>
+            <option value="5">Level 5 · +4</option>
+          </select>
+        </div>
+      </div>
+      <div class="equipped-row">
+        <div>
+          <div class="active-cell-name" style="margin-bottom:6px;">Equipped Active</div>
+          <select id="equipped">
+            <option value="none">— None —</option>
+            <option value="blackout">Blackout Pulse</option>
+            <option value="cloud">Cloud Armor</option>
+            <option value="optimize">Optimize / Overload</option>
+          </select>
+          <div class="equipped-note" id="equipped-note"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PASSIVE MODIFIERS -->
+  <div class="section">
+    <div class="section-label">Passive Modifiers — slot order determines the final result</div>
+    <div class="panel">
+      <div class="passive-slots">
+        <div class="passive-slot">
+          <div class="slot-num">1</div>
+          <div><select class="psel" data-slot="0"></select><div class="passive-desc" data-slot="0"></div></div>
+        </div>
+        <div class="passive-slot">
+          <div class="slot-num">2</div>
+          <div><select class="psel" data-slot="1"></select><div class="passive-desc" data-slot="1"></div></div>
+        </div>
+        <div class="passive-slot">
+          <div class="slot-num">3</div>
+          <div><select class="psel" data-slot="2"></select><div class="passive-desc" data-slot="2"></div></div>
+        </div>
+      </div>
+      <div class="notices">
+        <div class="notice warn" id="notice-cascade">⚠ CASCADE — The highest module no longer affects stats/actives. The other two each receive +50% of its value (rounded up). No effect if two modules are tied for highest.</div>
+        <div class="notice warn" id="notice-converge">⚠ CONVERGE — The lowest module gains the average of the other two (rounded up), then those two drop to 0. No effect if two modules are tied for lowest.</div>
+        <div class="notice info" id="notice-equalize">ℹ EQUALIZE — All modules become equal to the middle-value stack. No effect if the middle value equals the highest or lowest.</div>
+        <div class="notice warn" id="notice-nullify">⚠ NULLIFY — Reverses all changes applied to the lowest module (Invert passives excluded). No effect if two modules are tied for lowest.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="section">
+    <div class="section-label">Result — final stacks</div>
+    <div class="results-grid">
+
+      <div class="module-card offense" id="card-off">
+        <div class="mod-header">
+          <div class="mod-name">Offense</div>
+          <div class="mod-lock" id="lock-off">LOCKED</div>
+        </div>
+        <div class="mod-stacks">
+          <div class="mod-value" id="res-off">8</div>
+          <div class="mod-base" id="base-bracket-off">[8]</div>
+        </div>
+        <div class="mod-potency" id="pot-off"></div>
+        <div class="mod-stat" id="attr-off-res">Weapon Handling</div>
+        <div class="mod-stat-pct" id="pct-off">+8%</div>
+        <div class="mod-rate" id="rate-off">1% per stack</div>
+      </div>
+
+      <div class="module-card defense" id="card-def">
+        <div class="mod-header">
+          <div class="mod-name">Defense</div>
+          <div class="mod-lock" id="lock-def">LOCKED</div>
+        </div>
+        <div class="mod-stacks">
+          <div class="mod-value" id="res-def">8</div>
+          <div class="mod-base" id="base-bracket-def">[8]</div>
+        </div>
+        <div class="mod-potency" id="pot-def"></div>
+        <div class="mod-stat" id="attr-def-res">Max Armor</div>
+        <div class="mod-stat-pct" id="pct-def">+4%</div>
+        <div class="mod-rate" id="rate-def">0.5% per stack</div>
+      </div>
+
+      <div class="module-card utility" id="card-util">
+        <div class="mod-header">
+          <div class="mod-name">Utility</div>
+          <div class="mod-lock" id="lock-util">LOCKED</div>
+        </div>
+        <div class="mod-stacks">
+          <div class="mod-value" id="res-util">8</div>
+          <div class="mod-base" id="base-bracket-util">[8]</div>
+        </div>
+        <div class="mod-potency" id="pot-util"></div>
+        <div class="mod-stat" id="attr-util-res">Skill Damage</div>
+        <div class="mod-stat-pct" id="pct-util">+8%</div>
+        <div class="mod-rate" id="rate-util">1% per stack</div>
+      </div>
+
+    </div>
+
+    <div class="bars">
+      <div class="bar-row">
+        <div class="bar-label off" id="lbl-off">OFF 8</div>
+        <div class="bar-track"><div class="bar-fill off" id="bar-off" style="width:33%"></div></div>
+        <div class="bar-pct" id="barpct-off">33%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label def" id="lbl-def">DEF 8</div>
+        <div class="bar-track"><div class="bar-fill def" id="bar-def" style="width:33%"></div></div>
+        <div class="bar-pct" id="barpct-def">33%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label util" id="lbl-util">UTIL 8</div>
+        <div class="bar-track"><div class="bar-fill util" id="bar-util" style="width:33%"></div></div>
+        <div class="bar-pct" id="barpct-util">33%</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-main">DIVISION 2 · RECOMBINANT CALCULATOR · Y8S1 RISE UP</div>
+    <div class="footer-credit">Tool created by <span>BillOTheWild</span></div>
+  </div>
+</div>
+
+<script>
+const PASSIVE_LIST = [
+  {id:'none', label:'— None —', apply:null, desc:''},
+  // OFFENSE
+  {id:'amp_off',      label:'Amplify (Offense)',      desc:'Offense +5', apply:(s)=>{if(!s.lock_off)s.off+=5;}},
+  {id:'consume_off',  label:'Consume (Offense)',      desc:'Offense +10 · Defense −5 · Utility −5', apply:(s)=>{if(!s.lock_off)s.off+=10;if(!s.lock_def)s.def-=5;if(!s.lock_util)s.util-=5;}},
+  {id:'saturate_off', label:'Saturate (Offense)',     desc:'Offense +25 · Offense stat disabled', apply:(s)=>{if(!s.lock_off)s.off+=25;s.sat_off=true;}},
+  {id:'split_off',    label:'Split (Offense)',        desc:'Offense −15 · Defense +10 · Utility +10', apply:(s)=>{if(!s.lock_off)s.off-=15;if(!s.lock_def)s.def+=10;if(!s.lock_util)s.util+=10;}},
+  {id:'pivot_off',    label:'Pivot (Offense)',        desc:'Lowest module +15 · Offense −10 (no effect if Offense is lowest, or Def/Util tied for lowest)', apply:(s)=>{
+    const mn=Math.min(s.off,s.def,s.util);
+    if(s.off===mn)return;if(s.def===mn&&s.util===mn)return;
+    if(s.def===mn&&!s.lock_def)s.def+=15;else if(s.util===mn&&!s.lock_util)s.util+=15;
+    if(!s.lock_off)s.off-=10;
+  }},
+  {id:'compress_off', label:'Compress (Offense)',     desc:'Offense −10 · Offense potency ×1.5', apply:(s)=>{if(!s.lock_off){s.off-=10;s.pot_off*=1.5;}}},
+  {id:'conv1_off',    label:'Convert 1 (Offense)',    desc:'Offense → Headshot Damage (3%/stack)', apply:(s)=>{s.conv_off='headshot';}},
+  {id:'conv2_off',    label:'Convert 2 (Offense)',    desc:'Offense → Magazine Size (1%/stack)', apply:(s)=>{s.conv_off='magsize';}},
+  {id:'stab_off',     label:'Stabilize (Offense)',    desc:'Offense stacks locked for subsequent passives', apply:(s)=>{s.lock_off=true;}},
+  {id:'invert_off',   label:'Invert (Offense)',       desc:'Swap Offense with the highest module (no effect if Offense is already highest, or Def/Util tied for highest)', apply:(s)=>{
+    const mx=Math.max(s.off,s.def,s.util);
+    if(s.off===mx)return;if(s.def===mx&&s.util===mx)return;
+    if(s.def===mx){[s.off,s.def]=[s.def,s.off];}else{[s.off,s.util]=[s.util,s.off];}
+  }},
+  // DEFENSE
+  {id:'amp_def',      label:'Amplify (Defense)',      desc:'Defense +5', apply:(s)=>{if(!s.lock_def)s.def+=5;}},
+  {id:'consume_def',  label:'Consume (Defense)',      desc:'Defense +10 · Offense −5 · Utility −5', apply:(s)=>{if(!s.lock_def)s.def+=10;if(!s.lock_off)s.off-=5;if(!s.lock_util)s.util-=5;}},
+  {id:'saturate_def', label:'Saturate (Defense)',     desc:'Defense +25 · Defense stat disabled', apply:(s)=>{if(!s.lock_def)s.def+=25;s.sat_def=true;}},
+  {id:'split_def',    label:'Split (Defense)',        desc:'Defense −15 · Offense +10 · Utility +10', apply:(s)=>{if(!s.lock_def)s.def-=15;if(!s.lock_off)s.off+=10;if(!s.lock_util)s.util+=10;}},
+  {id:'pivot_def',    label:'Pivot (Defense)',        desc:'Lowest module +15 · Defense −10 (no effect if Defense is lowest, or Off/Util tied for lowest)', apply:(s)=>{
+    const mn=Math.min(s.off,s.def,s.util);
+    if(s.def===mn)return;if(s.off===mn&&s.util===mn)return;
+    if(s.off===mn&&!s.lock_off)s.off+=15;else if(s.util===mn&&!s.lock_util)s.util+=15;
+    if(!s.lock_def)s.def-=10;
+  }},
+  {id:'compress_def', label:'Compress (Defense)',     desc:'Defense −10 · Defense potency ×1.5', apply:(s)=>{if(!s.lock_def){s.def-=10;s.pot_def*=1.5;}}},
+  {id:'conv1_def',    label:'Convert 1 (Defense)',    desc:'Defense → Protection from Elites (0.5%/stack)', apply:(s)=>{s.conv_def='elites';}},
+  {id:'conv2_def',    label:'Convert 2 (Defense)',    desc:'Defense → Hazard Protection (1%/stack)', apply:(s)=>{s.conv_def='hazard';}},
+  {id:'stab_def',     label:'Stabilize (Defense)',    desc:'Defense stacks locked for subsequent passives', apply:(s)=>{s.lock_def=true;}},
+  {id:'invert_def',   label:'Invert (Defense)',       desc:'Swap Defense with the highest module (no effect if Defense is already highest, or Off/Util tied for highest)', apply:(s)=>{
+    const mx=Math.max(s.off,s.def,s.util);
+    if(s.def===mx)return;if(s.off===mx&&s.util===mx)return;
+    if(s.off===mx){[s.def,s.off]=[s.off,s.def];}else{[s.def,s.util]=[s.util,s.def];}
+  }},
+  // UTILITY
+  {id:'amp_util',     label:'Amplify (Utility)',      desc:'Utility +5', apply:(s)=>{if(!s.lock_util)s.util+=5;}},
+  {id:'consume_util', label:'Consume (Utility)',      desc:'Utility +10 · Offense −5 · Defense −5', apply:(s)=>{if(!s.lock_util)s.util+=10;if(!s.lock_off)s.off-=5;if(!s.lock_def)s.def-=5;}},
+  {id:'saturate_util',label:'Saturate (Utility)',     desc:'Utility +25 · Utility stat disabled', apply:(s)=>{if(!s.lock_util)s.util+=25;s.sat_util=true;}},
+  {id:'split_util',   label:'Split (Utility)',        desc:'Utility −15 · Offense +10 · Defense +10', apply:(s)=>{if(!s.lock_util)s.util-=15;if(!s.lock_off)s.off+=10;if(!s.lock_def)s.def+=10;}},
+  {id:'pivot_util',   label:'Pivot (Utility)',        desc:'Lowest module +15 · Utility −10 (no effect if Utility is lowest, or Off/Def tied for lowest)', apply:(s)=>{
+    const mn=Math.min(s.off,s.def,s.util);
+    if(s.util===mn)return;if(s.off===mn&&s.def===mn)return;
+    if(s.off===mn&&!s.lock_off)s.off+=15;else if(s.def===mn&&!s.lock_def)s.def+=15;
+    if(!s.lock_util)s.util-=10;
+  }},
+  {id:'compress_util',label:'Compress (Utility)',     desc:'Utility −10 · Utility potency ×1.5', apply:(s)=>{if(!s.lock_util){s.util-=10;s.pot_util*=1.5;}}},
+  {id:'conv1_util',   label:'Convert 1 (Utility)',    desc:'Utility → Skill Repair (1%/stack)', apply:(s)=>{s.conv_util='skillrepair';}},
+  {id:'conv2_util',   label:'Convert 2 (Utility)',    desc:'Utility → Status Effects (1%/stack)', apply:(s)=>{s.conv_util='statuseffects';}},
+  {id:'stab_util',    label:'Stabilize (Utility)',    desc:'Utility stacks locked for subsequent passives', apply:(s)=>{s.lock_util=true;}},
+  {id:'invert_util',  label:'Invert (Utility)',       desc:'Swap Utility with the highest module (no effect if Utility is already highest, or Off/Def tied for highest)', apply:(s)=>{
+    const mx=Math.max(s.off,s.def,s.util);
+    if(s.util===mx)return;if(s.off===mx&&s.def===mx)return;
+    if(s.off===mx){[s.util,s.off]=[s.off,s.util];}else{[s.util,s.def]=[s.def,s.util];}
+  }},
+  // WILDCARDS
+  {id:'cascade',  label:'Cascade (Wildcard)',  desc:'Highest module disabled · other two each +50% of its value (rounded up) · no effect if 2 tied for highest', apply:(s)=>{
+    const mx=Math.max(s.off,s.def,s.util);
+    if([s.off===mx,s.def===mx,s.util===mx].filter(Boolean).length>1)return;
+    const h=Math.ceil(mx/2);
+    if(s.off===mx){s.sat_off=true;s.def+=h;s.util+=h;}
+    else if(s.def===mx){s.sat_def=true;s.off+=h;s.util+=h;}
+    else{s.sat_util=true;s.off+=h;s.def+=h;}
+  }},
+  {id:'converge', label:'Converge (Wildcard)', desc:'Lowest module +average of the other two (rounded up) · other two → 0 · no effect if 2 tied for lowest', apply:(s)=>{
+    const mn=Math.min(s.off,s.def,s.util);
+    if([s.off===mn,s.def===mn,s.util===mn].filter(Boolean).length>1)return;
+    if(s.off===mn){const a=Math.ceil((s.def+s.util)/2);s.off+=a;s.def=0;s.util=0;}
+    else if(s.def===mn){const a=Math.ceil((s.off+s.util)/2);s.def+=a;s.off=0;s.util=0;}
+    else{const a=Math.ceil((s.off+s.def)/2);s.util+=a;s.off=0;s.def=0;}
+  }},
+  {id:'equalize', label:'Equalize (Wildcard)', desc:'All modules → middle-value stack · no effect if middle = max or middle = min', apply:(s)=>{
+    const sorted=[s.off,s.def,s.util].slice().sort((a,b)=>a-b);
+    const med=sorted[1];
+    if(med===sorted[0]||med===sorted[2])return;
+    s.off=med;s.def=med;s.util=med;
+  }},
+  {id:'nullify',  label:'Nullify (Wildcard)',  desc:'Reverses all changes to the lowest module (Invert excluded) · no effect if 2 tied for lowest', apply:(s)=>{
+    const mn=Math.min(s.off,s.def,s.util);
+    if([s.off===mn,s.def===mn,s.util===mn].filter(Boolean).length>1)return;
+    const b=s._base;
+    if(s.off===mn){const d=s.off-b;s.off=b-d;}
+    else if(s.def===mn){const d=s.def-b;s.def=b-d;}
+    else{const d=s.util-b;s.util=b-d;}
+  }},
+];
+
+// Stat definitions: [label, rate per stack, unit]
+const STAT_DEFS = {
+  // Offense defaults & converts
+  weapon_handling: ['Weapon Handling',  1,    '%'],
+  headshot:        ['Headshot Damage',  3,    '%'],
+  magsize:         ['Magazine Size',    1,    '%'],
+  // Defense defaults & converts
+  max_armor:       ['Max Armor',           0.5,  '%'],
+  elites:          ['Protection from Elites', 0.5, '%'],
+  hazard:          ['Hazard Protection',   1,    '%'],
+  // Utility defaults & converts
+  skill_damage:    ['Skill Damage',        1,    '%'],
+  skillrepair:     ['Skill Repair',        1,    '%'],
+  statuseffects:   ['Status Effects',      1,    '%'],
+};
+
+const MODULE_DEFAULTS = { off:'weapon_handling', def:'max_armor', util:'skill_damage' };
+
+const EQUIPPED_NOTES = {
+  none: '',
+  blackout: 'EMP · radius <em>10m +0.5m/Offense stack</em> · cooldown <em>−1s/Defense stack</em> (lv 3+)',
+  cloud:    'Repair armor <em>5% +0.2%/Defense stack</em> /sec · 10s · cooldown <em>−1s/Utility stack</em> (lv 3+)',
+  optimize: 'Reduces active cooldowns <em>30% +0.8%/Utility stack</em> · cooldown <em>−1s/Offense stack</em> (lv 3+)',
+};
+
+// Populate passive selects
+document.querySelectorAll('.psel').forEach(sel => {
+  PASSIVE_LIST.forEach(p => {
+    const o = document.createElement('option');
+    o.value = p.id; o.textContent = p.label;
+    sel.appendChild(o);
+  });
+  sel.addEventListener('change', update);
+});
+['lv-blackout','lv-cloud','lv-optimize','equipped'].forEach(id =>
+  document.getElementById(id).addEventListener('change', update)
+);
+
+function lvBonus(id) {
+  const v = parseInt(document.getElementById(id).value);
+  return Math.max(0, v - 1);
+}
+
+function update() {
+  const totalBonus = lvBonus('lv-blackout') + lvBonus('lv-cloud') + lvBonus('lv-optimize');
+  const base = 8 + totalBonus;
+
+  document.getElementById('base-display').innerHTML = `${base} / ${base} / ${base}<span>BASE STACKS (8 + ${totalBonus})</span>`;
+  document.getElementById('base-bracket-off').textContent = `[${base}]`;
+  document.getElementById('base-bracket-def').textContent = `[${base}]`;
+  document.getElementById('base-bracket-util').textContent = `[${base}]`;
+
+  const equippedId = document.getElementById('equipped').value;
+  document.getElementById('equipped-note').innerHTML = EQUIPPED_NOTES[equippedId] || '';
+
+  const s = {
+    off: base, def: base, util: base,
+    pot_off: 1, pot_def: 1, pot_util: 1,
+    lock_off: false, lock_def: false, lock_util: false,
+    sat_off: false, sat_def: false, sat_util: false,
+    conv_off: null, conv_def: null, conv_util: null,
+    _base: base,
+  };
+  const flags = { cascade:false, converge:false, equalize:false, nullify:false };
+
+  document.querySelectorAll('.psel').forEach((sel, i) => {
+    const p = PASSIVE_LIST.find(x => x.id === sel.value);
+    const descEl = document.querySelector(`.passive-desc[data-slot="${i}"]`);
+    if (!p || p.id === 'none') { descEl.textContent = ''; return; }
+    descEl.textContent = p.desc;
+    if (flags.hasOwnProperty(p.id)) flags[p.id] = true;
+    if (p.apply) p.apply(s);
+  });
+
+  s.off = Math.max(0, s.off);
+  s.def = Math.max(0, s.def);
+  s.util = Math.max(0, s.util);
+
+  // Determine stat keys
+  const statOff  = s.conv_off  || MODULE_DEFAULTS.off;
+  const statDef  = s.conv_def  || MODULE_DEFAULTS.def;
+  const statUtil = s.conv_util || MODULE_DEFAULTS.util;
+
+  // Calculate % values with potency
+  const calcPct = (stacks, potency, statKey) => {
+    const [, rate] = STAT_DEFS[statKey];
+    return (stacks * rate * potency).toFixed(1);
+  };
+
+  // Update result cards
+  const modules = [
+    { m:'off', stat:statOff,  sat:s.sat_off,  lock:s.lock_off,  pot:s.pot_off,  val:s.off },
+    { m:'def', stat:statDef,  sat:s.sat_def,  lock:s.lock_def,  pot:s.pot_def,  val:s.def },
+    { m:'util',stat:statUtil, sat:s.sat_util, lock:s.lock_util, pot:s.pot_util, val:s.util },
+  ];
+
+  modules.forEach(({m, stat, sat, lock, pot, val}) => {
+    document.getElementById(`res-${m}`).textContent = val;
+    document.getElementById(`pot-${m}`).textContent = pot > 1 ? `potency ×${pot.toFixed(1)}` : '';
+
+    const [statLabel, rate] = STAT_DEFS[stat];
+    document.getElementById(`attr-${m}-res`).textContent = sat ? '⛔ stat disabled' : statLabel;
+    document.getElementById(`pct-${m}`).textContent = sat ? '—' : `+${calcPct(val, pot, stat)}%`;
+    document.getElementById(`rate-${m}`).textContent = sat ? '' : `${rate}% per stack${pot > 1 ? ` · ×${pot.toFixed(1)} potency` : ''}`;
+
+    const lockEl = document.getElementById(`lock-${m}`);
+    lockEl.classList.toggle('visible', lock);
+
+    const card = document.getElementById(`card-${m}`);
+    card.classList.toggle('mod-card-disabled', sat);
+    card.classList.toggle('active-glow', !sat && val > base);
+  });
+
+  // Bars
+  const tot = (s.off + s.def + s.util) || 1;
+  [['off','OFF'],['def','DEF'],['util','UTIL']].forEach(([m, lbl]) => {
+    const v = s[m];
+    const pct = Math.round(v / tot * 100);
+    document.getElementById(`bar-${m}`).style.width = pct + '%';
+    document.getElementById(`lbl-${m}`).textContent = `${lbl} ${v}`;
+    document.getElementById(`barpct-${m}`).textContent = pct + '%';
+  });
+
+  // Notices
+  Object.keys(flags).forEach(k => {
+    document.getElementById(`notice-${k}`).style.display = flags[k] ? 'block' : 'none';
+  });
+}
+
+update();
+</script>
+</body>
+</html>
