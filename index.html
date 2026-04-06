@@ -867,37 +867,29 @@ input[type=number]:focus { border-color: var(--accent); box-shadow: 0 0 0 1px va
     </div>
 
     <div class="section">
-      <div class="section-label">Required attribute — force a specific stat per module</div>
+      <div class="section-label">Required attributes — check the stats you want to include</div>
       <div class="panel">
         <div class="threshold-row">
           <div class="threshold-cell">
-            <div class="threshold-label off">Offense attribute</div>
-            <select id="req-attr-off">
-              <option value="any">Any (no constraint)</option>
-              <option value="weapon_handling">Weapon Handling (default)</option>
-              <option value="headshot">Headshot Damage — Convert 1</option>
-              <option value="magsize">Magazine Size — Convert 2</option>
-            </select>
+            <div class="threshold-label off">Offense</div>
+            <label class="check-item" style="margin-top:6px;"><input type="checkbox" id="req-off-weapon_handling"> Weapon Handling</label>
+            <label class="check-item"><input type="checkbox" id="req-off-headshot"> Headshot Damage</label>
+            <label class="check-item"><input type="checkbox" id="req-off-magsize"> Magazine Size</label>
           </div>
           <div class="threshold-cell">
-            <div class="threshold-label def">Defense attribute</div>
-            <select id="req-attr-def">
-              <option value="any">Any (no constraint)</option>
-              <option value="max_armor">Max Armor (default)</option>
-              <option value="elites">Protection from Elites — Convert 1</option>
-              <option value="hazard">Hazard Protection — Convert 2</option>
-            </select>
+            <div class="threshold-label def">Defense</div>
+            <label class="check-item" style="margin-top:6px;"><input type="checkbox" id="req-def-max_armor"> Max Armor</label>
+            <label class="check-item"><input type="checkbox" id="req-def-elites"> Protection from Elites</label>
+            <label class="check-item"><input type="checkbox" id="req-def-hazard"> Hazard Protection</label>
           </div>
           <div class="threshold-cell">
-            <div class="threshold-label util">Utility attribute</div>
-            <select id="req-attr-util">
-              <option value="any">Any (no constraint)</option>
-              <option value="skill_damage">Skill Damage (default)</option>
-              <option value="skillrepair">Skill Repair — Convert 1</option>
-              <option value="statuseffects">Status Effects — Convert 2</option>
-            </select>
+            <div class="threshold-label util">Utility</div>
+            <label class="check-item" style="margin-top:6px;"><input type="checkbox" id="req-util-skill_damage"> Skill Damage</label>
+            <label class="check-item"><input type="checkbox" id="req-util-skillrepair"> Skill Repair</label>
+            <label class="check-item"><input type="checkbox" id="req-util-statuseffects"> Status Effects</label>
           </div>
         </div>
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);margin-top:10px;">Leave all unchecked = no constraint on that module. Check one or more = build must include those attributes.</div>
       </div>
     </div>
 
@@ -988,8 +980,8 @@ const PASSIVE_LIST = [
     if(!s.lock_off)s.off-=10;
   }},
   {id:'compress_off', label:'Compress (Offense)',     desc:'Offense −10 · Offense potency ×1.5', apply:(s)=>{if(!s.lock_off){s.off-=10;s.pot_off*=1.5;}}},
-  {id:'conv1_off',    label:'Convert 1 (Offense)',    desc:'Offense → Headshot Damage (3%/stack)', apply:(s)=>{s.conv_off='headshot';}},
-  {id:'conv2_off',    label:'Convert 2 (Offense)',    desc:'Offense → Magazine Size (1%/stack)', apply:(s)=>{s.conv_off='magsize';}},
+  {id:'conv1_off',    label:'Convert 1 (Offense)',    desc:'Offense → Headshot Damage (3%/stack)', apply:(s)=>{s.conv_off.push('headshot');}},
+  {id:'conv2_off',    label:'Convert 2 (Offense)',    desc:'Offense → Magazine Size (1%/stack)', apply:(s)=>{s.conv_off.push('magsize');}},
   {id:'stab_off',     label:'Stabilize (Offense)',    desc:'Offense stacks locked for subsequent passives', apply:(s)=>{s.lock_off=true;}},
   {id:'invert_off',   label:'Invert (Offense)',       desc:'Swap Offense with the highest module (no effect if Offense is already highest, or Def/Util tied for highest)', apply:(s)=>{
     const mx=Math.max(s.off,s.def,s.util);
@@ -1008,8 +1000,8 @@ const PASSIVE_LIST = [
     if(!s.lock_def)s.def-=10;
   }},
   {id:'compress_def', label:'Compress (Defense)',     desc:'Defense −10 · Defense potency ×1.5', apply:(s)=>{if(!s.lock_def){s.def-=10;s.pot_def*=1.5;}}},
-  {id:'conv1_def',    label:'Convert 1 (Defense)',    desc:'Defense → Protection from Elites (0.5%/stack)', apply:(s)=>{s.conv_def='elites';}},
-  {id:'conv2_def',    label:'Convert 2 (Defense)',    desc:'Defense → Hazard Protection (1%/stack)', apply:(s)=>{s.conv_def='hazard';}},
+  {id:'conv1_def',    label:'Convert 1 (Defense)',    desc:'Defense → Protection from Elites (0.5%/stack)', apply:(s)=>{s.conv_def.push('elites');}},
+  {id:'conv2_def',    label:'Convert 2 (Defense)',    desc:'Defense → Hazard Protection (1%/stack)', apply:(s)=>{s.conv_def.push('hazard');}},
   {id:'stab_def',     label:'Stabilize (Defense)',    desc:'Defense stacks locked for subsequent passives', apply:(s)=>{s.lock_def=true;}},
   {id:'invert_def',   label:'Invert (Defense)',       desc:'Swap Defense with the highest module (no effect if Defense is already highest, or Off/Util tied for highest)', apply:(s)=>{
     const mx=Math.max(s.off,s.def,s.util);
@@ -1028,8 +1020,8 @@ const PASSIVE_LIST = [
     if(!s.lock_util)s.util-=10;
   }},
   {id:'compress_util',label:'Compress (Utility)',     desc:'Utility −10 · Utility potency ×1.5', apply:(s)=>{if(!s.lock_util){s.util-=10;s.pot_util*=1.5;}}},
-  {id:'conv1_util',   label:'Convert 1 (Utility)',    desc:'Utility → Skill Repair (1%/stack)', apply:(s)=>{s.conv_util='skillrepair';}},
-  {id:'conv2_util',   label:'Convert 2 (Utility)',    desc:'Utility → Status Effects (1%/stack)', apply:(s)=>{s.conv_util='statuseffects';}},
+  {id:'conv1_util',   label:'Convert 1 (Utility)',    desc:'Utility → Skill Repair (1%/stack)', apply:(s)=>{s.conv_util.push('skillrepair');}},
+  {id:'conv2_util',   label:'Convert 2 (Utility)',    desc:'Utility → Status Effects (1%/stack)', apply:(s)=>{s.conv_util.push('statuseffects');}},
   {id:'stab_util',    label:'Stabilize (Utility)',    desc:'Utility stacks locked for subsequent passives', apply:(s)=>{s.lock_util=true;}},
   {id:'invert_util',  label:'Invert (Utility)',       desc:'Swap Utility with the highest module (no effect if Utility is already highest, or Off/Def tied for highest)', apply:(s)=>{
     const mx=Math.max(s.off,s.def,s.util);
@@ -1107,6 +1099,8 @@ document.querySelectorAll('.psel').forEach(sel => {
   document.getElementById(id).addEventListener('change', update)
 );
 
+// IDs that conflict with each other (same module converts — last wins, so both allowed but warn)
+// Only block truly identical IDs
 function refreshDuplicateBlocking() {
   const sels = Array.from(document.querySelectorAll('.psel'));
   sels.forEach((sel, i) => {
@@ -1116,6 +1110,7 @@ function refreshDuplicateBlocking() {
       .filter(v => v !== 'none');
     Array.from(sel.options).forEach(opt => {
       if (opt.value === 'none') { opt.disabled = false; return; }
+      // Only block exact duplicate IDs — different passives are always allowed
       opt.disabled = usedInPrevious.includes(opt.value);
     });
   });
@@ -1145,7 +1140,7 @@ function update() {
     pot_off: 1, pot_def: 1, pot_util: 1,
     lock_off: false, lock_def: false, lock_util: false,
     sat_off: false, sat_def: false, sat_util: false,
-    conv_off: null, conv_def: null, conv_util: null,
+    conv_off: [], conv_def: [], conv_util: [],
     _base: base,
   };
   const flags = { cascade:false, converge:false, equalize:false, nullify:false };
@@ -1163,12 +1158,17 @@ function update() {
   s.def = Math.max(0, s.def);
   s.util = Math.max(0, s.util);
 
-  // Determine stat keys
-  const statOff  = s.conv_off  || MODULE_DEFAULTS.off;
-  const statDef  = s.conv_def  || MODULE_DEFAULTS.def;
-  const statUtil = s.conv_util || MODULE_DEFAULTS.util;
+  // Helper: get all active stats for a module (default + all converts, last convert wins for attribute)
+  function getStats(convArr, defaultStat) {
+    if (convArr.length === 0) return [defaultStat];
+    return convArr; // all converts active — last one wins for display, show all
+  }
 
-  // Calculate % values with potency
+  const statsOff  = getStats(s.conv_off,  MODULE_DEFAULTS.off);
+  const statsDef  = getStats(s.conv_def,  MODULE_DEFAULTS.def);
+  const statsUtil = getStats(s.conv_util, MODULE_DEFAULTS.util);
+
+  // Calculate % values with potency — use last convert (it overrides previous)
   const calcPct = (stacks, potency, statKey) => {
     const [, rate] = STAT_DEFS[statKey];
     return (stacks * rate * potency).toFixed(1);
@@ -1176,26 +1176,28 @@ function update() {
 
   // Update result cards
   const modules = [
-    { m:'off', stat:statOff,  sat:s.sat_off,  lock:s.lock_off,  pot:s.pot_off,  val:s.off },
-    { m:'def', stat:statDef,  sat:s.sat_def,  lock:s.lock_def,  pot:s.pot_def,  val:s.def },
-    { m:'util',stat:statUtil, sat:s.sat_util, lock:s.lock_util, pot:s.pot_util, val:s.util },
+    { m:'off', stats:statsOff,  sat:s.sat_off,  lock:s.lock_off,  pot:s.pot_off,  val:s.off },
+    { m:'def', stats:statsDef,  sat:s.sat_def,  lock:s.lock_def,  pot:s.pot_def,  val:s.def },
+    { m:'util',stats:statsUtil, sat:s.sat_util, lock:s.lock_util, pot:s.pot_util, val:s.util },
   ];
 
-  modules.forEach(({m, stat, sat, lock, pot, val}) => {
+  modules.forEach(({m, stats, sat, lock, pot, val}) => {
     document.getElementById(`res-${m}`).textContent = val;
     document.getElementById(`pot-${m}`).textContent = pot > 1 ? `potency ×${pot.toFixed(1)}` : '';
 
-    const [statLabel, rate] = STAT_DEFS[stat];
-    document.getElementById(`attr-${m}-res`).textContent = sat ? '⛔ stat disabled' : statLabel;
-    document.getElementById(`pct-${m}`).textContent = sat ? '—' : `+${calcPct(val, pot, stat)}%`;
-    document.getElementById(`rate-${m}`).textContent = sat ? '' : `${rate}% per stack${pot > 1 ? ` · ×${pot.toFixed(1)} potency` : ''}`;
+    if (sat) {
+      document.getElementById(`attr-${m}-res`).textContent = '⛔ stat disabled';
+      document.getElementById(`pct-${m}`).textContent = '—';
+      document.getElementById(`rate-${m}`).textContent = '';
+    } else {
+      document.getElementById(`attr-${m}-res`).textContent = stats.map(sk => STAT_DEFS[sk][0]).join(' + ');
+      document.getElementById(`pct-${m}`).textContent = stats.map(sk => `+${calcPct(val, pot, sk)}%`).join(' / ');
+      document.getElementById(`rate-${m}`).textContent = stats.map(sk => `${STAT_DEFS[sk][1]}%/stack`).join(' · ') + (pot > 1 ? ` · ×${pot.toFixed(1)} potency` : '');
+    }
 
-    const lockEl = document.getElementById(`lock-${m}`);
-    lockEl.classList.toggle('visible', lock);
-
-    const card = document.getElementById(`card-${m}`);
-    card.classList.toggle('mod-card-disabled', sat);
-    card.classList.toggle('active-glow', !sat && val > base);
+    document.getElementById(`lock-${m}`).classList.toggle('visible', lock);
+    document.getElementById(`card-${m}`).classList.toggle('mod-card-disabled', sat);
+    document.getElementById(`card-${m}`).classList.toggle('active-glow', !sat && val > base);
   });
 
   // Bars
@@ -1254,7 +1256,9 @@ function buildChecks() {
       cb.id = 'opt-' + p.id;
       cb.checked = true;
       label.appendChild(cb);
-      label.appendChild(document.createTextNode(p.label.replace(/ \(.*?\)/, '')));
+      // Keep the verb only (Amplify, Consume, Convert 1, Convert 2, etc.) — strip module name in parens
+      const shortLabel = p.label.replace(/\s*\([^)]*\)\s*$/, '');
+      label.appendChild(document.createTextNode(shortLabel));
       container.appendChild(label);
     });
   });
@@ -1279,7 +1283,7 @@ function simState(p1, p2, p3, base) {
     pot_off: 1, pot_def: 1, pot_util: 1,
     lock_off: false, lock_def: false, lock_util: false,
     sat_off: false, sat_def: false, sat_util: false,
-    conv_off: null, conv_def: null, conv_util: null,
+    conv_off: [], conv_def: [], conv_util: [],
     _base: base,
   };
   [p1, p2, p3].forEach(p => { if (p && p.apply) p.apply(s); });
@@ -1290,16 +1294,19 @@ function simState(p1, p2, p3, base) {
 }
 
 function score(s, goal) {
-  const rateOff  = STAT_DEFS[s.conv_off  || 'weapon_handling'][1];
-  const rateDef  = STAT_DEFS[s.conv_def  || 'max_armor'][1];
-  const rateUtil = STAT_DEFS[s.conv_util || 'skill_damage'][1];
-  const eo = s.sat_off  ? 0 : s.off  * s.pot_off  * rateOff;
-  const ed = s.sat_def  ? 0 : s.def  * s.pot_def  * rateDef;
-  const eu = s.sat_util ? 0 : s.util * s.pot_util * rateUtil;
+  // Sum all active stat contributions per module (default + all converts)
+  const sumRate = (convArr, defaultStat, stacks, pot) => {
+    if (stacks === 0) return 0;
+    const stats = convArr.length ? convArr : [defaultStat];
+    return stats.reduce((acc, sk) => acc + stacks * pot * STAT_DEFS[sk][1], 0);
+  };
+  const eo = s.sat_off  ? 0 : sumRate(s.conv_off,  'weapon_handling', s.off,  s.pot_off);
+  const ed = s.sat_def  ? 0 : sumRate(s.conv_def,  'max_armor',       s.def,  s.pot_def);
+  const eu = s.sat_util ? 0 : sumRate(s.conv_util, 'skill_damage',    s.util, s.pot_util);
   if (goal === 'off')  return s.sat_off  ? -9999 : eo;
   if (goal === 'def')  return s.sat_def  ? -9999 : ed;
   if (goal === 'util') return s.sat_util ? -9999 : eu;
-  return eo + ed + eu; // balanced
+  return eo + ed + eu;
 }
 
 function runOptimizer() {
@@ -1315,33 +1322,52 @@ function runOptimizer() {
     const minUtil = parseInt(document.getElementById('min-util').value) || 0;
     const noSat   = document.getElementById('no-saturate').checked;
     const noConv  = document.getElementById('no-converge').checked;
-    const reqOff  = document.getElementById('req-attr-off').value;
-    const reqDef  = document.getElementById('req-attr-def').value;
-    const reqUtil = document.getElementById('req-attr-util').value;
 
-    // Map required attribute to the convert passive id that produces it
-    const ATTR_TO_CONV = {
-      weapon_handling: null,       // default, no convert needed
-      headshot:        'conv1_off',
-      magsize:         'conv2_off',
-      max_armor:       null,
-      elites:          'conv1_def',
-      hazard:          'conv2_def',
-      skill_damage:    null,
-      skillrepair:     'conv1_util',
-      statuseffects:   'conv2_util',
+    // Read required attributes from checkboxes — empty set = no constraint
+    const REQ_ATTR_MAP = {
+      off:  ['weapon_handling','headshot','magsize'],
+      def:  ['max_armor','elites','hazard'],
+      util: ['skill_damage','skillrepair','statuseffects'],
+    };
+    const ATTR_TO_CONV_ID = {
+      weapon_handling: null, headshot:'conv1_off', magsize:'conv2_off',
+      max_armor: null, elites:'conv1_def', hazard:'conv2_def',
+      skill_damage: null, skillrepair:'conv1_util', statuseffects:'conv2_util',
     };
 
-    const requiredPassives = new Set();
-    if (reqOff  !== 'any' && ATTR_TO_CONV[reqOff])  requiredPassives.add(ATTR_TO_CONV[reqOff]);
-    if (reqDef  !== 'any' && ATTR_TO_CONV[reqDef])  requiredPassives.add(ATTR_TO_CONV[reqDef]);
-    if (reqUtil !== 'any' && ATTR_TO_CONV[reqUtil]) requiredPassives.add(ATTR_TO_CONV[reqUtil]);
+    // For each module, collect which attributes are required
+    const reqAttrs = { off:[], def:[], util:[] };
+    Object.entries(REQ_ATTR_MAP).forEach(([mod, attrs]) => {
+      attrs.forEach(attr => {
+        if (document.getElementById(`req-${mod}-${attr}`).checked) {
+          reqAttrs[mod].push(attr);
+        }
+      });
+    });
 
-    // Attributes that must NOT appear (default = no convert of that type)
+    // Build required passive IDs (converts needed) and forbidden passive IDs
+    const requiredPassives = new Set();
     const forbiddenPassives = new Set();
-    if (reqOff === 'weapon_handling')  { forbiddenPassives.add('conv1_off'); forbiddenPassives.add('conv2_off'); }
-    if (reqDef === 'max_armor')        { forbiddenPassives.add('conv1_def'); forbiddenPassives.add('conv2_def'); }
-    if (reqUtil === 'skill_damage')    { forbiddenPassives.add('conv1_util'); forbiddenPassives.add('conv2_util'); }
+
+    Object.entries(reqAttrs).forEach(([mod, attrs]) => {
+      if (attrs.length === 0) return; // no constraint
+      // Each required attr that needs a convert must appear in the combo
+      attrs.forEach(attr => {
+        const convId = ATTR_TO_CONV_ID[attr];
+        if (convId) requiredPassives.add(convId);
+      });
+      // If default attr (no convert) is NOT in required list, forbid all converts of that module
+      // If default attr IS required alongside converts, don't forbid anything
+      const defaultAttrs = { off:'weapon_handling', def:'max_armor', util:'skill_damage' };
+      const convIds = { off:['conv1_off','conv2_off'], def:['conv1_def','conv2_def'], util:['conv1_util','conv2_util'] };
+      // If only non-default attrs are required, we don't need to forbid the default (converts override it)
+      // If default is required AND no converts are required, forbid all converts for that module
+      const hasDefaultRequired = attrs.includes(defaultAttrs[mod]);
+      const hasConvertRequired = attrs.some(a => ATTR_TO_CONV_ID[a] !== null);
+      if (hasDefaultRequired && !hasConvertRequired) {
+        convIds[mod].forEach(id => forbiddenPassives.add(id));
+      }
+    });
 
     const pool = getUnlocked();
     const top = [];
@@ -1385,15 +1411,16 @@ function runOptimizer() {
     } else {
       container.innerHTML = '<div class="opt-results-title">Top results — click "Load" to apply in the calculator</div>';
       best.forEach((r, idx) => {
-        const statOff  = r.s.conv_off  || 'weapon_handling';
-        const statDef  = r.s.conv_def  || 'max_armor';
-        const statUtil = r.s.conv_util || 'skill_damage';
-        const pctOff  = r.s.sat_off  ? '—' : `+${(r.s.off  * STAT_DEFS[statOff][1]  * r.s.pot_off).toFixed(1)}%`;
-        const pctDef  = r.s.sat_def  ? '—' : `+${(r.s.def  * STAT_DEFS[statDef][1]  * r.s.pot_def).toFixed(1)}%`;
-        const pctUtil = r.s.sat_util ? '—' : `+${(r.s.util * STAT_DEFS[statUtil][1] * r.s.pot_util).toFixed(1)}%`;
-        const lOff  = STAT_DEFS[statOff][0];
-        const lDef  = STAT_DEFS[statDef][0];
-        const lUtil = STAT_DEFS[statUtil][0];
+        const lastOff  = r.s.conv_off.length  ? r.s.conv_off[r.s.conv_off.length-1]   : 'weapon_handling';
+        const lastDef  = r.s.conv_def.length  ? r.s.conv_def[r.s.conv_def.length-1]   : 'max_armor';
+        const lastUtil = r.s.conv_util.length ? r.s.conv_util[r.s.conv_util.length-1] : 'skill_damage';
+        const allOff  = r.s.conv_off.length  ? r.s.conv_off  : ['weapon_handling'];
+        const allDef  = r.s.conv_def.length  ? r.s.conv_def  : ['max_armor'];
+        const allUtil = r.s.conv_util.length ? r.s.conv_util : ['skill_damage'];
+        const fmtStats = (arr, val, pot, sat) => sat ? '—' : arr.map(sk => `+${(val * STAT_DEFS[sk][1] * pot).toFixed(1)}% ${STAT_DEFS[sk][0]}`).join(' · ');
+        const pctOff  = fmtStats(allOff,  r.s.off,  r.s.pot_off,  r.s.sat_off);
+        const pctDef  = fmtStats(allDef,  r.s.def,  r.s.pot_def,  r.s.sat_def);
+        const pctUtil = fmtStats(allUtil, r.s.util, r.s.pot_util, r.s.sat_util);
 
         const card = document.createElement('div');
         card.className = 'result-card';
@@ -1405,9 +1432,9 @@ function runOptimizer() {
             <span>3.</span> ${r.p3.label}
           </div>
           <div class="result-stacks">
-            <div class="result-stack off ${r.s.sat_off ? 'disabled' : ''}">OFF ${r.s.off} · ${pctOff} ${lOff}</div>
-            <div class="result-stack def ${r.s.sat_def ? 'disabled' : ''}">DEF ${r.s.def} · ${pctDef} ${lDef}</div>
-            <div class="result-stack util ${r.s.sat_util ? 'disabled' : ''}">UTIL ${r.s.util} · ${pctUtil} ${lUtil}</div>
+            <div class="result-stack off ${r.s.sat_off ? 'disabled' : ''}">OFF ${r.s.off} · ${pctOff}</div>
+            <div class="result-stack def ${r.s.sat_def ? 'disabled' : ''}">DEF ${r.s.def} · ${pctDef}</div>
+            <div class="result-stack util ${r.s.sat_util ? 'disabled' : ''}">UTIL ${r.s.util} · ${pctUtil}</div>
           </div>
           <button class="load-btn" onclick="loadBuild('${r.p1.id}','${r.p2.id}','${r.p3.id}')">Load in Calculator →</button>
         `;
