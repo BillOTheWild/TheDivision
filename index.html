@@ -435,10 +435,242 @@ select option { background: #1a1a1a; }
   font-weight: 600;
 }
 
+/* TABS */
+.tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 28px;
+  border-bottom: 1px solid var(--border2);
+}
+.tab-btn {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  margin-bottom: -1px;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* OPTIMIZER */
+.opt-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.opt-group { display: flex; flex-direction: column; gap: 8px; }
+.opt-group-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.check-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text);
+  cursor: pointer;
+}
+.check-item input[type=checkbox] {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--accent);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.check-item.wildcard { color: var(--util); }
+.threshold-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.threshold-cell { display: flex; flex-direction: column; gap: 4px; }
+.threshold-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.threshold-label.off { color: var(--off); }
+.threshold-label.def { color: var(--def); }
+.threshold-label.util { color: var(--util); }
+input[type=number] {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  padding: 7px 10px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+input[type=number]:hover { border-color: var(--accent); }
+input[type=number]:focus { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.opt-goal-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.goal-btn {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  color: var(--text-dim);
+  padding: 8px 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+}
+.goal-btn:hover { border-color: var(--accent); color: var(--accent); }
+.goal-btn.active-off { border-color: var(--off); color: var(--off); background: rgba(232,64,64,0.08); }
+.goal-btn.active-def { border-color: var(--def); color: var(--def); background: rgba(74,158,221,0.08); }
+.goal-btn.active-util { border-color: var(--util); color: var(--util); background: rgba(240,165,0,0.08); }
+.goal-btn.active-bal { border-color: #aaa; color: #aaa; background: rgba(255,255,255,0.04); }
+.run-btn {
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  background: var(--accent);
+  color: #000;
+  border: none;
+  padding: 12px;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+  margin-top: 4px;
+}
+.run-btn:hover { opacity: 0.88; }
+.run-btn:active { transform: scale(0.99); }
+.run-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.opt-results { margin-top: 20px; }
+.opt-results-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+}
+.result-card {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  position: relative;
+}
+.result-card:first-child { border-color: var(--accent); }
+.result-rank {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+.result-card:first-child .result-rank { color: var(--accent); }
+.result-passives {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text);
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+.result-passives span { color: var(--accent); }
+.result-stacks {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.result-stack {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+}
+.result-stack.off { color: var(--off); }
+.result-stack.def { color: var(--def); }
+.result-stack.util { color: var(--util); }
+.result-stack.disabled { color: var(--text-muted); text-decoration: line-through; }
+.load-btn {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: none;
+  border: 1px solid var(--border2);
+  color: var(--text-dim);
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-left: auto;
+  display: block;
+  margin-top: 8px;
+}
+.load-btn:hover { border-color: var(--accent); color: var(--accent); }
+.opt-empty {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 24px;
+  border: 1px dashed var(--border2);
+}
+.separator {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 16px 0;
+}
+.no-saturate-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+.no-saturate-row input { accent-color: var(--accent); }
+
 @media (max-width: 600px) {
   .actives-grid { grid-template-columns: 1fr; }
   .results-grid { grid-template-columns: 1fr; }
   .mod-value { font-size: 40px; }
+  .opt-grid { grid-template-columns: 1fr; }
+  .opt-goal-row { grid-template-columns: 1fr 1fr; }
+  .threshold-row { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -461,7 +693,12 @@ select option { background: #1a1a1a; }
     </div>
   </div>
 
-  <!-- ACTIVE MODIFIERS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('calculator')">Calculator</button>
+    <button class="tab-btn" onclick="switchTab('optimizer')">Optimizer</button>
+  </div>
+
+  <div id="tab-calculator" class="tab-content active">
   <div class="section">
     <div class="section-label">Active Modifiers — stack bonuses stack from all three</div>
     <div class="panel">
@@ -613,7 +850,124 @@ select option { background: #1a1a1a; }
     </div>
   </div>
 
-  <div class="footer">
+  </div><!-- end tab-calculator -->
+
+  <div id="tab-optimizer" class="tab-content">
+
+    <div class="section">
+      <div class="section-label">Objective — what to maximize</div>
+      <div class="panel">
+        <div class="opt-goal-row">
+          <button class="goal-btn active-off" id="goal-off" onclick="setGoal('off')">Offense</button>
+          <button class="goal-btn" id="goal-def" onclick="setGoal('def')">Defense</button>
+          <button class="goal-btn" id="goal-util" onclick="setGoal('util')">Utility</button>
+          <button class="goal-btn" id="goal-bal" onclick="setGoal('bal')">Balanced</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Required attribute — force a specific stat per module</div>
+      <div class="panel">
+        <div class="threshold-row">
+          <div class="threshold-cell">
+            <div class="threshold-label off">Offense attribute</div>
+            <select id="req-attr-off">
+              <option value="any">Any (no constraint)</option>
+              <option value="weapon_handling">Weapon Handling (default)</option>
+              <option value="headshot">Headshot Damage — Convert 1</option>
+              <option value="magsize">Magazine Size — Convert 2</option>
+            </select>
+          </div>
+          <div class="threshold-cell">
+            <div class="threshold-label def">Defense attribute</div>
+            <select id="req-attr-def">
+              <option value="any">Any (no constraint)</option>
+              <option value="max_armor">Max Armor (default)</option>
+              <option value="elites">Protection from Elites — Convert 1</option>
+              <option value="hazard">Hazard Protection — Convert 2</option>
+            </select>
+          </div>
+          <div class="threshold-cell">
+            <div class="threshold-label util">Utility attribute</div>
+            <select id="req-attr-util">
+              <option value="any">Any (no constraint)</option>
+              <option value="skill_damage">Skill Damage (default)</option>
+              <option value="skillrepair">Skill Repair — Convert 1</option>
+              <option value="statuseffects">Status Effects — Convert 2</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Minimum thresholds for the other modules</div>
+      <div class="panel">
+        <div class="threshold-row">
+          <div class="threshold-cell">
+            <div class="threshold-label off">Min Offense</div>
+            <input type="number" id="min-off" value="0" min="0" max="100">
+          </div>
+          <div class="threshold-cell">
+            <div class="threshold-label def">Min Defense</div>
+            <input type="number" id="min-def" value="0" min="0" max="100">
+          </div>
+          <div class="threshold-cell">
+            <div class="threshold-label util">Min Utility</div>
+            <input type="number" id="min-util" value="0" min="0" max="100">
+          </div>
+        </div>
+        <label class="no-saturate-row">
+          <input type="checkbox" id="no-saturate">
+          Exclude builds that disable a stat (Saturate)
+        </label>
+        <label class="no-saturate-row">
+          <input type="checkbox" id="no-converge">
+          Exclude builds that zero out two modules (Converge)
+        </label>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Unlocked passives — check what you have</div>
+      <div class="panel">
+        <div class="opt-grid">
+          <div class="opt-group">
+            <div class="opt-group-title">Offense passives</div>
+            <div class="check-grid" id="checks-off"></div>
+          </div>
+          <div class="opt-group">
+            <div class="opt-group-title">Defense passives</div>
+            <div class="check-grid" id="checks-def"></div>
+          </div>
+        </div>
+        <hr class="separator">
+        <div class="opt-grid">
+          <div class="opt-group">
+            <div class="opt-group-title">Utility passives</div>
+            <div class="check-grid" id="checks-util"></div>
+          </div>
+          <div class="opt-group">
+            <div class="opt-group-title">Wildcards</div>
+            <div class="check-grid" id="checks-wild"></div>
+          </div>
+        </div>
+        <hr class="separator">
+        <div style="display:flex;gap:10px;margin-top:4px;">
+          <button class="load-btn" style="margin:0;" onclick="checkAll(true)">Check all</button>
+          <button class="load-btn" style="margin:0;" onclick="checkAll(false)">Uncheck all</button>
+        </div>
+      </div>
+    </div>
+
+    <button class="run-btn" id="run-btn" onclick="runOptimizer()">▶ Find Best Build</button>
+
+    <div class="opt-results" id="opt-results">
+      <div class="opt-empty">Configure your options above and click "Find Best Build"</div>
+    </div>
+
+  </div><!-- end tab-optimizer -->
     <div class="footer-main">DIVISION 2 · RECOMBINANT CALCULATOR · Y8S1 RISE UP</div>
     <div class="footer-credit">Tool created by <span>BillOTheWild</span></div>
   </div>
@@ -861,6 +1215,221 @@ function update() {
 }
 
 update();
+
+// ===================== TABS =====================
+function switchTab(name) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ===================== OPTIMIZER =====================
+let currentGoal = 'off';
+
+function setGoal(g) {
+  currentGoal = g;
+  ['off','def','util','bal'].forEach(x => {
+    const b = document.getElementById('goal-' + x);
+    b.className = 'goal-btn' + (x === g ? ` active-${x}` : '');
+  });
+}
+
+// Build check lists from PASSIVE_LIST
+const PASSIVE_GROUPS = {
+  off:  PASSIVE_LIST.filter(p => p.id !== 'none' && p.id.endsWith('_off')),
+  def:  PASSIVE_LIST.filter(p => p.id !== 'none' && p.id.endsWith('_def')),
+  util: PASSIVE_LIST.filter(p => p.id !== 'none' && p.id.endsWith('_util')),
+  wild: PASSIVE_LIST.filter(p => ['cascade','converge','equalize','nullify'].includes(p.id)),
+};
+
+function buildChecks() {
+  Object.entries(PASSIVE_GROUPS).forEach(([grp, list]) => {
+    const container = document.getElementById('checks-' + grp);
+    list.forEach(p => {
+      const label = document.createElement('label');
+      label.className = 'check-item' + (grp === 'wild' ? ' wildcard' : '');
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.id = 'opt-' + p.id;
+      cb.checked = true;
+      label.appendChild(cb);
+      label.appendChild(document.createTextNode(p.label.replace(/ \(.*?\)/, '')));
+      container.appendChild(label);
+    });
+  });
+}
+buildChecks();
+
+function checkAll(val) {
+  document.querySelectorAll('[id^="opt-"]').forEach(cb => cb.checked = val);
+}
+
+function getUnlocked() {
+  return PASSIVE_LIST.filter(p => {
+    if (p.id === 'none') return false;
+    const cb = document.getElementById('opt-' + p.id);
+    return cb && cb.checked;
+  });
+}
+
+function simState(p1, p2, p3, base) {
+  const s = {
+    off: base, def: base, util: base,
+    pot_off: 1, pot_def: 1, pot_util: 1,
+    lock_off: false, lock_def: false, lock_util: false,
+    sat_off: false, sat_def: false, sat_util: false,
+    conv_off: null, conv_def: null, conv_util: null,
+    _base: base,
+  };
+  [p1, p2, p3].forEach(p => { if (p && p.apply) p.apply(s); });
+  s.off = Math.max(0, s.off);
+  s.def = Math.max(0, s.def);
+  s.util = Math.max(0, s.util);
+  return s;
+}
+
+function score(s, goal) {
+  const rateOff  = STAT_DEFS[s.conv_off  || 'weapon_handling'][1];
+  const rateDef  = STAT_DEFS[s.conv_def  || 'max_armor'][1];
+  const rateUtil = STAT_DEFS[s.conv_util || 'skill_damage'][1];
+  const eo = s.sat_off  ? 0 : s.off  * s.pot_off  * rateOff;
+  const ed = s.sat_def  ? 0 : s.def  * s.pot_def  * rateDef;
+  const eu = s.sat_util ? 0 : s.util * s.pot_util * rateUtil;
+  if (goal === 'off')  return s.sat_off  ? -9999 : eo;
+  if (goal === 'def')  return s.sat_def  ? -9999 : ed;
+  if (goal === 'util') return s.sat_util ? -9999 : eu;
+  return eo + ed + eu; // balanced
+}
+
+function runOptimizer() {
+  const btn = document.getElementById('run-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Computing...';
+
+  setTimeout(() => {
+    const totalBonus = lvBonus('lv-blackout') + lvBonus('lv-cloud') + lvBonus('lv-optimize');
+    const base = 8 + totalBonus;
+    const minOff  = parseInt(document.getElementById('min-off').value)  || 0;
+    const minDef  = parseInt(document.getElementById('min-def').value)  || 0;
+    const minUtil = parseInt(document.getElementById('min-util').value) || 0;
+    const noSat   = document.getElementById('no-saturate').checked;
+    const noConv  = document.getElementById('no-converge').checked;
+    const reqOff  = document.getElementById('req-attr-off').value;
+    const reqDef  = document.getElementById('req-attr-def').value;
+    const reqUtil = document.getElementById('req-attr-util').value;
+
+    // Map required attribute to the convert passive id that produces it
+    const ATTR_TO_CONV = {
+      weapon_handling: null,       // default, no convert needed
+      headshot:        'conv1_off',
+      magsize:         'conv2_off',
+      max_armor:       null,
+      elites:          'conv1_def',
+      hazard:          'conv2_def',
+      skill_damage:    null,
+      skillrepair:     'conv1_util',
+      statuseffects:   'conv2_util',
+    };
+
+    const requiredPassives = new Set();
+    if (reqOff  !== 'any' && ATTR_TO_CONV[reqOff])  requiredPassives.add(ATTR_TO_CONV[reqOff]);
+    if (reqDef  !== 'any' && ATTR_TO_CONV[reqDef])  requiredPassives.add(ATTR_TO_CONV[reqDef]);
+    if (reqUtil !== 'any' && ATTR_TO_CONV[reqUtil]) requiredPassives.add(ATTR_TO_CONV[reqUtil]);
+
+    // Attributes that must NOT appear (default = no convert of that type)
+    const forbiddenPassives = new Set();
+    if (reqOff === 'weapon_handling')  { forbiddenPassives.add('conv1_off'); forbiddenPassives.add('conv2_off'); }
+    if (reqDef === 'max_armor')        { forbiddenPassives.add('conv1_def'); forbiddenPassives.add('conv2_def'); }
+    if (reqUtil === 'skill_damage')    { forbiddenPassives.add('conv1_util'); forbiddenPassives.add('conv2_util'); }
+
+    const pool = getUnlocked();
+    const top = [];
+    const seen = new Set();
+
+    for (let i = 0; i < pool.length; i++) {
+      for (let j = 0; j < pool.length; j++) {
+        if (j === i) continue;
+        for (let k = 0; k < pool.length; k++) {
+          if (k === i || k === j) continue;
+          const p1 = pool[i], p2 = pool[j], p3 = pool[k];
+          const combo = [p1.id, p2.id, p3.id];
+
+          // Enforce required passives
+          if ([...requiredPassives].some(req => !combo.includes(req))) continue;
+          // Enforce forbidden passives
+          if (combo.some(id => forbiddenPassives.has(id))) continue;
+
+          const s = simState(p1, p2, p3, base);
+
+          if (noSat && (s.sat_off || s.sat_def || s.sat_util)) continue;
+          if (noConv && ((s.off === 0 && s.def === 0) || (s.off === 0 && s.util === 0) || (s.def === 0 && s.util === 0))) continue;
+          if (s.off < minOff || s.def < minDef || s.util < minUtil) continue;
+
+          const sc = score(s, currentGoal);
+          const key = combo.join('|');
+          if (seen.has(key)) continue;
+          seen.add(key);
+
+          top.push({ p1, p2, p3, s, sc });
+        }
+      }
+    }
+
+    top.sort((a, b) => b.sc - a.sc);
+    const best = top.slice(0, 5);
+
+    const container = document.getElementById('opt-results');
+    if (best.length === 0) {
+      container.innerHTML = '<div class="opt-empty">No build found matching your constraints. Try relaxing the minimum thresholds, required attributes, or unlocking more passives.</div>';
+    } else {
+      container.innerHTML = '<div class="opt-results-title">Top results — click "Load" to apply in the calculator</div>';
+      best.forEach((r, idx) => {
+        const statOff  = r.s.conv_off  || 'weapon_handling';
+        const statDef  = r.s.conv_def  || 'max_armor';
+        const statUtil = r.s.conv_util || 'skill_damage';
+        const pctOff  = r.s.sat_off  ? '—' : `+${(r.s.off  * STAT_DEFS[statOff][1]  * r.s.pot_off).toFixed(1)}%`;
+        const pctDef  = r.s.sat_def  ? '—' : `+${(r.s.def  * STAT_DEFS[statDef][1]  * r.s.pot_def).toFixed(1)}%`;
+        const pctUtil = r.s.sat_util ? '—' : `+${(r.s.util * STAT_DEFS[statUtil][1] * r.s.pot_util).toFixed(1)}%`;
+        const lOff  = STAT_DEFS[statOff][0];
+        const lDef  = STAT_DEFS[statDef][0];
+        const lUtil = STAT_DEFS[statUtil][0];
+
+        const card = document.createElement('div');
+        card.className = 'result-card';
+        card.innerHTML = `
+          <div class="result-rank">${idx === 0 ? '★ BEST BUILD' : `#${idx + 1}`}</div>
+          <div class="result-passives">
+            <span>1.</span> ${r.p1.label}<br>
+            <span>2.</span> ${r.p2.label}<br>
+            <span>3.</span> ${r.p3.label}
+          </div>
+          <div class="result-stacks">
+            <div class="result-stack off ${r.s.sat_off ? 'disabled' : ''}">OFF ${r.s.off} · ${pctOff} ${lOff}</div>
+            <div class="result-stack def ${r.s.sat_def ? 'disabled' : ''}">DEF ${r.s.def} · ${pctDef} ${lDef}</div>
+            <div class="result-stack util ${r.s.sat_util ? 'disabled' : ''}">UTIL ${r.s.util} · ${pctUtil} ${lUtil}</div>
+          </div>
+          <button class="load-btn" onclick="loadBuild('${r.p1.id}','${r.p2.id}','${r.p3.id}')">Load in Calculator →</button>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    btn.disabled = false;
+    btn.textContent = '▶ Find Best Build';
+  }, 50);
+}
+
+function loadBuild(id1, id2, id3) {
+  const sels = document.querySelectorAll('.psel');
+  [id1, id2, id3].forEach((id, i) => { sels[i].value = id; });
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-calculator').classList.add('active');
+  document.querySelectorAll('.tab-btn')[0].classList.add('active');
+  update();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 </script>
 </body>
 </html>
