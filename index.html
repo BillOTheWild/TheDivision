@@ -739,11 +739,12 @@ const EQUIPPED_NOTES = {
   optimize: 'Reduces active cooldowns <em>30% +0.8%/Utility stack</em> · cooldown <em>−1s/Offense stack</em> (lv 3+)',
 };
 
-// Populate passive selects
+// Populate passive selects with description in label
 document.querySelectorAll('.psel').forEach(sel => {
   PASSIVE_LIST.forEach(p => {
     const o = document.createElement('option');
-    o.value = p.id; o.textContent = p.label;
+    o.value = p.id;
+    o.textContent = p.desc ? `${p.label}  —  ${p.desc}` : p.label;
     sel.appendChild(o);
   });
   sel.addEventListener('change', update);
@@ -752,12 +753,28 @@ document.querySelectorAll('.psel').forEach(sel => {
   document.getElementById(id).addEventListener('change', update)
 );
 
+function refreshDuplicateBlocking() {
+  const sels = Array.from(document.querySelectorAll('.psel'));
+  sels.forEach((sel, i) => {
+    const usedInPrevious = sels
+      .slice(0, i)
+      .map(s => s.value)
+      .filter(v => v !== 'none');
+    Array.from(sel.options).forEach(opt => {
+      if (opt.value === 'none') { opt.disabled = false; return; }
+      opt.disabled = usedInPrevious.includes(opt.value);
+    });
+  });
+}
+
 function lvBonus(id) {
   const v = parseInt(document.getElementById(id).value);
   return Math.max(0, v - 1);
 }
 
 function update() {
+  refreshDuplicateBlocking();
+
   const totalBonus = lvBonus('lv-blackout') + lvBonus('lv-cloud') + lvBonus('lv-optimize');
   const base = 8 + totalBonus;
 
@@ -783,7 +800,7 @@ function update() {
     const p = PASSIVE_LIST.find(x => x.id === sel.value);
     const descEl = document.querySelector(`.passive-desc[data-slot="${i}"]`);
     if (!p || p.id === 'none') { descEl.textContent = ''; return; }
-    descEl.textContent = p.desc;
+    descEl.textContent = `› ${p.desc}`;
     if (flags.hasOwnProperty(p.id)) flags[p.id] = true;
     if (p.apply) p.apply(s);
   });
