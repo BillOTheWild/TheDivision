@@ -1356,17 +1356,21 @@ function runOptimizer() {
         const convId = ATTR_TO_CONV_ID[attr];
         if (convId) requiredPassives.add(convId);
       });
-      // If default attr (no convert) is NOT in required list, forbid all converts of that module
-      // If default attr IS required alongside converts, don't forbid anything
+
       const defaultAttrs = { off:'weapon_handling', def:'max_armor', util:'skill_damage' };
-      const convIds = { off:['conv1_off','conv2_off'], def:['conv1_def','conv2_def'], util:['conv1_util','conv2_util'] };
-      // If only non-default attrs are required, we don't need to forbid the default (converts override it)
-      // If default is required AND no converts are required, forbid all converts for that module
-      const hasDefaultRequired = attrs.includes(defaultAttrs[mod]);
-      const hasConvertRequired = attrs.some(a => ATTR_TO_CONV_ID[a] !== null);
-      if (hasDefaultRequired && !hasConvertRequired) {
-        convIds[mod].forEach(id => forbiddenPassives.add(id));
-      }
+      const convMap = {
+        off:  { weapon_handling: null, headshot:'conv1_off', magsize:'conv2_off' },
+        def:  { max_armor: null, elites:'conv1_def', hazard:'conv2_def' },
+        util: { skill_damage: null, skillrepair:'conv1_util', statuseffects:'conv2_util' },
+      };
+
+      // Forbid any convert of this module that is NOT in the required list
+      Object.entries(convMap[mod]).forEach(([attr, convId]) => {
+        if (!convId) return; // default attr has no convert to forbid
+        if (!attrs.includes(attr)) {
+          forbiddenPassives.add(convId);
+        }
+      });
     });
 
     const pool = getUnlocked();
