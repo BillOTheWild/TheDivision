@@ -7,752 +7,292 @@
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
 :root {
-  --off: #e84040;
-  --off-dim: #7a1a1a;
-  --off-bg: #1a0808;
-  --off-glow: rgba(232,64,64,0.15);
-  --def: #4a9edd;
-  --def-dim: #1a4a7a;
-  --def-bg: #080f1a;
-  --def-glow: rgba(74,158,221,0.15);
-  --util: #f0a500;
-  --util-dim: #7a5000;
-  --util-bg: #1a1000;
-  --util-glow: rgba(240,165,0,0.15);
-  --bg: #0a0a0a;
-  --bg2: #111111;
-  --bg3: #181818;
-  --border: #2a2a2a;
-  --border2: #333;
-  --text: #d0c8b8;
-  --text-dim: #666;
-  --text-muted: #444;
-  --accent: #f0a500;
-  --font-ui: 'Rajdhani', sans-serif;
-  --font-mono: 'Share Tech Mono', monospace;
+  --off:#e84040; --off-dim:#7a1a1a; --off-glow:rgba(232,64,64,0.15);
+  --def:#4a9edd; --def-dim:#1a4a7a; --def-glow:rgba(74,158,221,0.15);
+  --util:#f0a500; --util-dim:#7a5000; --util-glow:rgba(240,165,0,0.15);
+  --bg:#0a0a0a; --bg2:#111; --bg3:#181818;
+  --border:#2a2a2a; --border2:#333;
+  --text:#d0c8b8; --text-dim:#666; --text-muted:#444;
+  --accent:#f0a500;
+  --font-ui:'Rajdhani',sans-serif; --font-mono:'Share Tech Mono',monospace;
 }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--font-ui);font-size:15px;min-height:100vh;
+  background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.015) 39px,rgba(255,255,255,.015) 40px),
+  repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,.015) 39px,rgba(255,255,255,.015) 40px);}
+.app{max-width:900px;margin:0 auto;padding:24px 16px 48px;}
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+.header{display:flex;align-items:center;gap:16px;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border2);position:relative;}
+.header::after{content:'';position:absolute;bottom:-1px;left:0;width:120px;height:1px;background:var(--accent);}
+.header-icon{width:48px;height:48px;background:var(--bg3);border:1px solid var(--accent);display:flex;align-items:center;justify-content:center;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);flex-shrink:0;}
+.header-icon svg{width:28px;height:28px;fill:var(--accent);}
+.header-title{flex:1;}
+.header-title h1{font-size:26px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#fff;line-height:1;}
+.header-title p{font-size:12px;color:var(--text-dim);letter-spacing:.12em;text-transform:uppercase;margin-top:4px;font-family:var(--font-mono);}
+.base-display{font-family:var(--font-mono);font-size:13px;color:var(--accent);background:var(--bg3);border:1px solid var(--util-dim);padding:6px 12px;text-align:right;line-height:1.5;}
+.base-display span{display:block;color:var(--text-dim);font-size:11px;}
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-ui);
-  font-size: 15px;
-  min-height: 100vh;
-  background-image:
-    repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.015) 39px, rgba(255,255,255,0.015) 40px),
-    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.015) 39px, rgba(255,255,255,0.015) 40px);
-}
+.global-panel{background:var(--bg2);border:1px solid var(--border2);padding:14px 16px;margin-bottom:20px;position:relative;}
+.global-panel::before{content:'';position:absolute;top:0;left:0;width:40px;height:2px;background:var(--accent);}
+.global-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;}
+.global-title{font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);}
+.global-actions{display:flex;gap:8px;}
+.icon-btn{font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:none;border:1px solid var(--border2);color:var(--text-dim);padding:5px 12px;cursor:pointer;transition:all .15s;}
+.icon-btn.copy{border-color:var(--def-dim);color:var(--def);}
+.icon-btn.copy:hover{border-color:var(--def);background:rgba(74,158,221,.08);}
+.icon-btn.reset{border-color:var(--off-dim);color:var(--off);}
+.icon-btn.reset:hover{border-color:var(--off);background:rgba(232,64,64,.08);}
 
-.app {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 24px 16px 48px;
-}
+.actives-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;}
+.active-cell{display:flex;flex-direction:column;gap:6px;}
+.active-cell-name{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-family:var(--font-mono);}
+.equipped-row{padding-top:12px;border-top:1px solid var(--border);}
+.equipped-note{font-family:var(--font-mono);font-size:11px;color:var(--text-dim);margin-top:6px;min-height:14px;line-height:1.5;}
+.equipped-note em{color:var(--accent);font-style:normal;}
 
-/* HEADER */
-.header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 32px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--border2);
-  position: relative;
-}
-.header::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  width: 120px;
-  height: 1px;
-  background: var(--accent);
-}
-.header-icon {
-  width: 48px;
-  height: 48px;
-  background: var(--bg3);
-  border: 1px solid var(--accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
-  flex-shrink: 0;
-}
-.header-icon svg { width: 28px; height: 28px; fill: var(--accent); }
-.header-title { flex: 1; }
-.header-title h1 {
-  font-size: 26px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #fff;
-  line-height: 1;
-}
-.header-title p {
-  font-size: 12px;
-  color: var(--text-dim);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  margin-top: 4px;
-  font-family: var(--font-mono);
-}
-.base-display {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  color: var(--accent);
-  background: var(--bg3);
-  border: 1px solid var(--util-dim);
-  padding: 6px 12px;
-  text-align: right;
-  line-height: 1.5;
-}
-.base-display span { display: block; color: var(--text-dim); font-size: 11px; }
+.section{margin-bottom:24px;}
+.section-label{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-family:var(--font-mono);margin-bottom:10px;display:flex;align-items:center;gap:8px;background:rgba(240,165,0,.07);border:1px solid rgba(240,165,0,.25);padding:6px 10px;}
+.section-label::before{content:'';display:inline-block;width:3px;height:14px;background:var(--accent);flex-shrink:0;}
 
-/* SECTION */
-.section { margin-bottom: 24px; }
-.section-label {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--accent);
-  font-family: var(--font-mono);
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(240,165,0,0.07);
-  border: 1px solid rgba(240,165,0,0.25);
-  padding: 6px 10px;
-}
-.section-label::before {
-  content: '';
-  display: inline-block;
-  width: 3px;
-  height: 14px;
-  background: var(--accent);
-  flex-shrink: 0;
-}
+.panel{background:var(--bg2);border:1px solid var(--border2);padding:16px;position:relative;}
+.panel::before{content:'';position:absolute;top:0;left:0;width:40px;height:2px;background:var(--accent);}
 
-/* PANEL */
-.panel {
-  background: var(--bg2);
-  border: 1px solid var(--border2);
-  padding: 16px;
-  position: relative;
-}
-.panel::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  width: 40px; height: 2px;
-  background: var(--accent);
-}
+select{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:var(--font-ui);font-size:14px;font-weight:500;padding:7px 10px;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;transition:border-color .15s;}
+select:hover{border-color:var(--accent);}
+select:focus{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);}
+select option{background:#1a1a1a;}
 
-/* ACTIVES GRID */
-.actives-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-bottom: 16px;
-}
-.active-cell { display: flex; flex-direction: column; gap: 6px; }
-.active-cell-name {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--accent);
-  font-family: var(--font-mono);
-}
+.tabs{display:flex;margin-bottom:24px;border-bottom:1px solid var(--border2);}
+.tab-btn{font-family:var(--font-mono);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);background:none;border:none;border-bottom:2px solid transparent;padding:10px 20px;cursor:pointer;transition:color .15s,border-color .15s;margin-bottom:-1px;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
 
-/* SELECTS */
-select {
-  width: 100%;
-  background: var(--bg3);
-  border: 1px solid var(--border2);
-  color: var(--text);
-  font-family: var(--font-ui);
-  font-size: 14px;
-  font-weight: 500;
-  padding: 7px 10px;
-  cursor: pointer;
-  outline: none;
-  appearance: none;
-  -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  padding-right: 28px;
-  transition: border-color 0.15s;
-}
-select:hover { border-color: var(--accent); }
-select:focus { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
-select option { background: #1a1a1a; }
+.passive-slots{display:flex;flex-direction:column;}
+.passive-slot{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start;padding:10px 0;border-bottom:1px solid var(--border);}
+.passive-slot:last-child{border-bottom:none;}
+.slot-num{font-family:var(--font-mono);font-size:18px;font-weight:700;color:var(--text-muted);padding-top:7px;text-align:center;line-height:1;}
+.passive-desc{font-family:var(--font-mono);font-size:11px;color:var(--text-dim);margin-top:5px;min-height:14px;line-height:1.5;}
 
-/* EQUIPPED ROW */
-.equipped-row {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 12px;
-  align-items: start;
-  padding-top: 14px;
-  border-top: 1px solid var(--border);
-}
-.equipped-note {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--text-dim);
-  margin-top: 6px;
-  min-height: 14px;
-  line-height: 1.5;
-}
-.equipped-note em { color: var(--accent); font-style: normal; }
+.notices{margin-top:12px;display:flex;flex-direction:column;gap:6px;}
+.notice{font-family:var(--font-mono);font-size:11px;padding:8px 10px;border-left:2px solid;display:none;line-height:1.5;}
+.notice.warn{border-color:var(--off);background:rgba(232,64,64,.06);color:#e88080;}
+.notice.info{border-color:var(--def);background:rgba(74,158,221,.06);color:#88b8dd;}
 
-/* PASSIVES */
-.passive-slots { display: flex; flex-direction: column; gap: 0; }
-.passive-slot {
-  display: grid;
-  grid-template-columns: 28px 1fr;
-  gap: 10px;
-  align-items: start;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--border);
-}
-.passive-slot:last-child { border-bottom: none; }
-.slot-num {
-  font-family: var(--font-mono);
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text-muted);
-  padding-top: 7px;
-  text-align: center;
-  line-height: 1;
-}
-.passive-desc {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--text-dim);
-  margin-top: 5px;
-  min-height: 14px;
-  line-height: 1.5;
-}
+.results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
+.module-card{background:var(--bg3);border:1px solid var(--border2);padding:16px 14px 14px;position:relative;overflow:hidden;}
+.module-card::after{content:'';position:absolute;inset:0;opacity:0;transition:opacity .2s;pointer-events:none;}
+.module-card.offense{border-top:2px solid var(--off);}
+.module-card.offense::after{background:var(--off-glow);}
+.module-card.defense{border-top:2px solid var(--def);}
+.module-card.defense::after{background:var(--def-glow);}
+.module-card.utility{border-top:2px solid var(--util);}
+.module-card.utility::after{background:var(--util-glow);}
+.module-card.active-glow::after{opacity:1;}
+.mod-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.mod-name{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;font-family:var(--font-mono);}
+.offense .mod-name{color:var(--off);}
+.defense .mod-name{color:var(--def);}
+.utility .mod-name{color:var(--util);}
+.mod-lock{font-family:var(--font-mono);font-size:10px;padding:1px 6px;border:1px solid;display:none;}
+.offense .mod-lock{border-color:var(--off-dim);color:var(--off);}
+.defense .mod-lock{border-color:var(--def-dim);color:var(--def);}
+.utility .mod-lock{border-color:var(--util-dim);color:var(--util);}
+.mod-lock.visible{display:block;}
+.mod-stacks{display:flex;align-items:baseline;gap:6px;margin-bottom:4px;}
+.mod-value{font-size:52px;font-weight:700;line-height:1;font-family:var(--font-mono);}
+.offense .mod-value{color:var(--off);}
+.defense .mod-value{color:var(--def);}
+.utility .mod-value{color:var(--util);}
+.mod-card-disabled .mod-value{color:var(--text-muted)!important;text-decoration:line-through;}
+.mod-base{font-family:var(--font-mono);font-size:13px;color:var(--text-muted);}
+.mod-potency{font-family:var(--font-mono);font-size:11px;margin-bottom:8px;min-height:14px;}
+.offense .mod-potency{color:var(--off);}
+.defense .mod-potency{color:var(--def);}
+.utility .mod-potency{color:var(--util);}
+.mod-stat{font-size:13px;font-weight:600;letter-spacing:.04em;color:var(--text);min-height:18px;}
+.mod-stat-pct{font-family:var(--font-mono);font-size:18px;font-weight:700;margin-top:4px;}
+.offense .mod-stat-pct{color:var(--off);}
+.defense .mod-stat-pct{color:var(--def);}
+.utility .mod-stat-pct{color:var(--util);}
+.mod-card-disabled .mod-stat,.mod-card-disabled .mod-stat-pct{color:var(--text-muted)!important;}
+.mod-rate{font-family:var(--font-mono);font-size:10px;color:var(--text-muted);margin-top:2px;}
 
-/* NOTICES */
-.notices { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
-.notice {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  padding: 8px 10px;
-  border-left: 2px solid;
-  display: none;
-  line-height: 1.5;
-}
-.notice.warn { border-color: var(--off); background: rgba(232,64,64,0.06); color: #e88080; }
-.notice.info { border-color: var(--def); background: rgba(74,158,221,0.06); color: #88b8dd; }
-.notice.gold { border-color: var(--util); background: rgba(240,165,0,0.06); color: #d4a040; }
+.bars{display:flex;flex-direction:column;gap:8px;}
+.bar-row{display:flex;align-items:center;gap:10px;}
+.bar-label{font-family:var(--font-mono);font-size:12px;width:72px;text-align:right;flex-shrink:0;}
+.bar-label.off{color:var(--off);}
+.bar-label.def{color:var(--def);}
+.bar-label.util{color:var(--util);}
+.bar-track{flex:1;height:6px;background:var(--bg3);border:1px solid var(--border);overflow:hidden;}
+.bar-fill{height:100%;transition:width .35s cubic-bezier(.4,0,.2,1);}
+.bar-fill.off{background:var(--off);}
+.bar-fill.def{background:var(--def);}
+.bar-fill.util{background:var(--util);}
+.bar-pct{font-family:var(--font-mono);font-size:11px;width:36px;color:var(--text-dim);flex-shrink:0;}
 
-/* RESULTS */
-.results-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-bottom: 16px;
-}
+.history-list{display:flex;flex-direction:column;gap:6px;}
+.history-item{display:flex;align-items:center;gap:10px;background:var(--bg3);border:1px solid var(--border);padding:8px 12px;cursor:pointer;transition:border-color .15s;}
+.history-item:hover{border-color:var(--accent);}
+.history-passives{font-family:var(--font-mono);font-size:11px;color:var(--text-dim);flex:1;}
+.history-stacks{font-family:var(--font-mono);font-size:11px;display:flex;gap:10px;flex-shrink:0;}
+.history-stacks .off{color:var(--off);}
+.history-stacks .def{color:var(--def);}
+.history-stacks .util{color:var(--util);}
+.history-empty{font-family:var(--font-mono);font-size:11px;color:var(--text-muted);padding:10px;text-align:center;}
 
-.module-card {
-  background: var(--bg3);
-  border: 1px solid var(--border2);
-  padding: 16px 14px 14px;
-  position: relative;
-  overflow: hidden;
-  transition: border-color 0.2s;
-}
-.module-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity 0.2s;
-  pointer-events: none;
-}
-.module-card.offense { border-top: 2px solid var(--off); }
-.module-card.offense::after { background: var(--off-glow); }
-.module-card.defense { border-top: 2px solid var(--def); }
-.module-card.defense::after { background: var(--def-glow); }
-.module-card.utility { border-top: 2px solid var(--util); }
-.module-card.utility::after { background: var(--util-glow); }
-.module-card.active-glow::after { opacity: 1; }
+.opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.opt-group{display:flex;flex-direction:column;gap:8px;}
+.opt-group-title{font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;}
+.check-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.check-item{display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:12px;color:var(--text);cursor:pointer;position:relative;}
+.check-item input[type=checkbox]{width:14px;height:14px;accent-color:var(--accent);cursor:pointer;flex-shrink:0;}
+.check-item.wildcard{color:var(--util);}
+.check-item .tip{display:none;position:absolute;left:0;top:calc(100% + 4px);background:var(--bg2);border:1px solid var(--border2);padding:6px 8px;font-size:10px;color:var(--text-dim);line-height:1.5;z-index:20;min-width:200px;max-width:280px;pointer-events:none;}
+.check-item:hover .tip{display:block;}
 
-.mod-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-.mod-name {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  font-family: var(--font-mono);
-}
-.offense .mod-name { color: var(--off); }
-.defense .mod-name { color: var(--def); }
-.utility .mod-name { color: var(--util); }
+.threshold-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;}
+.threshold-cell{display:flex;flex-direction:column;gap:4px;}
+.threshold-label{font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;}
+.threshold-label.off{color:var(--off);}
+.threshold-label.def{color:var(--def);}
+.threshold-label.util{color:var(--util);}
+input[type=number]{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:var(--font-mono);font-size:14px;padding:7px 10px;outline:none;transition:border-color .15s;}
+input[type=number]:hover{border-color:var(--accent);}
+input[type=number]:focus{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);}
 
-.mod-lock {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  padding: 1px 6px;
-  border: 1px solid;
-  display: none;
-}
-.offense .mod-lock { border-color: var(--off-dim); color: var(--off); }
-.defense .mod-lock { border-color: var(--def-dim); color: var(--def); }
-.utility .mod-lock { border-color: var(--util-dim); color: var(--util); }
-.mod-lock.visible { display: block; }
+.opt-goal-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;}
+.goal-btn{font-family:var(--font-mono);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:var(--bg3);border:1px solid var(--border2);color:var(--text-dim);padding:8px 4px;cursor:pointer;transition:all .15s;text-align:center;}
+.goal-btn:hover{border-color:var(--accent);color:var(--accent);}
+.goal-btn.active-off{border-color:var(--off);color:var(--off);background:rgba(232,64,64,.08);}
+.goal-btn.active-def{border-color:var(--def);color:var(--def);background:rgba(74,158,221,.08);}
+.goal-btn.active-util{border-color:var(--util);color:var(--util);background:rgba(240,165,0,.08);}
+.goal-btn.active-bal{border-color:#aaa;color:#aaa;background:rgba(255,255,255,.04);}
 
-.mod-stacks {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  margin-bottom: 4px;
-}
-.mod-value {
-  font-size: 52px;
-  font-weight: 700;
-  line-height: 1;
-  font-family: var(--font-mono);
-  transition: color 0.2s;
-}
-.offense .mod-value { color: var(--off); }
-.defense .mod-value { color: var(--def); }
-.utility .mod-value { color: var(--util); }
-.mod-card-disabled .mod-value { color: var(--text-muted) !important; text-decoration: line-through; }
+.filter-row{display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:12px;color:var(--text-dim);margin-bottom:10px;cursor:pointer;}
+.filter-row:last-child{margin-bottom:0;}
+.filter-row input{accent-color:var(--accent);}
 
-.mod-base {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  color: var(--text-muted);
-}
+.run-btn{width:100%;font-family:var(--font-mono);font-size:14px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;background:var(--accent);color:#000;border:none;padding:12px;cursor:pointer;transition:opacity .15s,transform .1s;margin-top:4px;}
+.run-btn:hover{opacity:.88;}
+.run-btn:active{transform:scale(.99);}
+.run-btn:disabled{opacity:.4;cursor:not-allowed;}
+.opt-stats{font-family:var(--font-mono);font-size:11px;color:var(--text-muted);text-align:center;margin-top:8px;min-height:16px;}
 
-.mod-potency {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  margin-bottom: 8px;
-  min-height: 14px;
-}
-.offense .mod-potency { color: var(--off); }
-.defense .mod-potency { color: var(--def); }
-.utility .mod-potency { color: var(--util); }
+.opt-results{margin-top:20px;}
+.opt-results-title{font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;}
+.result-card{background:var(--bg3);border:1px solid var(--border2);padding:12px 14px;margin-bottom:8px;}
+.result-card.best{border-color:var(--accent);}
+.result-rank{font-family:var(--font-mono);font-size:10px;color:var(--text-muted);margin-bottom:6px;}
+.result-card.best .result-rank{color:var(--accent);}
+.result-passives{font-family:var(--font-mono);font-size:12px;color:var(--text);margin-bottom:6px;line-height:1.6;}
+.result-passives span{color:var(--accent);}
+.result-summary{font-family:var(--font-mono);font-size:11px;color:var(--text-muted);margin-bottom:8px;}
+.result-stacks{display:flex;gap:16px;flex-wrap:wrap;}
+.result-stack{font-family:var(--font-mono);font-size:12px;font-weight:600;}
+.result-stack.off{color:var(--off);}
+.result-stack.def{color:var(--def);}
+.result-stack.util{color:var(--util);}
+.result-stack.disabled{color:var(--text-muted);text-decoration:line-through;}
+.load-btn{font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;background:none;border:1px solid var(--border2);color:var(--text-dim);padding:4px 10px;cursor:pointer;transition:all .15s;margin-left:auto;display:block;margin-top:8px;}
+.load-btn:hover{border-color:var(--accent);color:var(--accent);}
+.opt-empty{font-family:var(--font-mono);font-size:12px;color:var(--text-muted);text-align:center;padding:24px;border:1px dashed var(--border2);}
+.separator{border:none;border-top:1px solid var(--border);margin:16px 0;}
 
-.mod-stat {
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--text);
-  min-height: 18px;
-}
-.mod-stat-pct {
-  font-family: var(--font-mono);
-  font-size: 18px;
-  font-weight: 700;
-  margin-top: 4px;
-}
-.offense .mod-stat-pct { color: var(--off); }
-.defense .mod-stat-pct { color: var(--def); }
-.utility .mod-stat-pct { color: var(--util); }
-.mod-card-disabled .mod-stat,
-.mod-card-disabled .mod-stat-pct { color: var(--text-muted) !important; }
+.toast{position:fixed;bottom:24px;right:24px;background:var(--bg3);border:1px solid var(--accent);color:var(--accent);font-family:var(--font-mono);font-size:12px;padding:10px 16px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:100;}
+.toast.show{opacity:1;}
 
-.mod-rate {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--text-muted);
-  margin-top: 2px;
-}
+.footer{margin-top:32px;padding-top:12px;border-top:1px solid var(--border);text-align:center;}
+.footer-main{font-family:var(--font-mono);font-size:10px;color:var(--text-muted);letter-spacing:.08em;}
+.footer-credit{font-family:var(--font-mono);font-size:11px;color:var(--text-dim);margin-top:4px;}
+.footer-credit span{color:var(--accent);font-weight:600;}
 
-/* BARS */
-.bars { display: flex; flex-direction: column; gap: 8px; }
-.bar-row { display: flex; align-items: center; gap: 10px; }
-.bar-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  width: 72px;
-  text-align: right;
-  flex-shrink: 0;
-}
-.bar-label.off { color: var(--off); }
-.bar-label.def { color: var(--def); }
-.bar-label.util { color: var(--util); }
-.bar-track {
-  flex: 1;
-  height: 6px;
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  overflow: hidden;
-}
-.bar-fill {
-  height: 100%;
-  transition: width 0.35s cubic-bezier(0.4,0,0.2,1);
-}
-.bar-fill.off { background: var(--off); }
-.bar-fill.def { background: var(--def); }
-.bar-fill.util { background: var(--util); }
-.bar-pct {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  width: 36px;
-  color: var(--text-dim);
-  flex-shrink: 0;
-}
-
-.footer {
-  margin-top: 32px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
-  text-align: center;
-}
-.footer-main {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--text-muted);
-  letter-spacing: 0.08em;
-}
-.footer-credit {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--text-dim);
-  margin-top: 4px;
-  letter-spacing: 0.06em;
-}
-.footer-credit span {
-  color: var(--accent);
-  font-weight: 600;
-}
-
-/* TABS */
-.tabs {
-  display: flex;
-  gap: 0;
-  margin-bottom: 28px;
-  border-bottom: 1px solid var(--border2);
-}
-.tab-btn {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-  background: none;
-  border: none;
-  border-bottom: 2px solid transparent;
-  padding: 10px 20px;
-  cursor: pointer;
-  transition: color 0.15s, border-color 0.15s;
-  margin-bottom: -1px;
-}
-.tab-btn:hover { color: var(--text); }
-.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
-.tab-content { display: none; }
-.tab-content.active { display: block; }
-
-/* OPTIMIZER */
-.opt-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-.opt-group { display: flex; flex-direction: column; gap: 8px; }
-.opt-group-title {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 4px;
-}
-.check-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6px;
-}
-.check-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--text);
-  cursor: pointer;
-}
-.check-item input[type=checkbox] {
-  width: 14px;
-  height: 14px;
-  accent-color: var(--accent);
-  cursor: pointer;
-  flex-shrink: 0;
-}
-.check-item.wildcard { color: var(--util); }
-.threshold-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-.threshold-cell { display: flex; flex-direction: column; gap: 4px; }
-.threshold-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-.threshold-label.off { color: var(--off); }
-.threshold-label.def { color: var(--def); }
-.threshold-label.util { color: var(--util); }
-input[type=number] {
-  width: 100%;
-  background: var(--bg3);
-  border: 1px solid var(--border2);
-  color: var(--text);
-  font-family: var(--font-mono);
-  font-size: 14px;
-  padding: 7px 10px;
-  outline: none;
-  transition: border-color 0.15s;
-}
-input[type=number]:hover { border-color: var(--accent); }
-input[type=number]:focus { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
-.opt-goal-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  margin-bottom: 12px;
-}
-.goal-btn {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  background: var(--bg3);
-  border: 1px solid var(--border2);
-  color: var(--text-dim);
-  padding: 8px 4px;
-  cursor: pointer;
-  transition: all 0.15s;
-  text-align: center;
-}
-.goal-btn:hover { border-color: var(--accent); color: var(--accent); }
-.goal-btn.active-off { border-color: var(--off); color: var(--off); background: rgba(232,64,64,0.08); }
-.goal-btn.active-def { border-color: var(--def); color: var(--def); background: rgba(74,158,221,0.08); }
-.goal-btn.active-util { border-color: var(--util); color: var(--util); background: rgba(240,165,0,0.08); }
-.goal-btn.active-bal { border-color: #aaa; color: #aaa; background: rgba(255,255,255,0.04); }
-.run-btn {
-  width: 100%;
-  font-family: var(--font-mono);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  background: var(--accent);
-  color: #000;
-  border: none;
-  padding: 12px;
-  cursor: pointer;
-  transition: opacity 0.15s, transform 0.1s;
-  margin-top: 4px;
-}
-.run-btn:hover { opacity: 0.88; }
-.run-btn:active { transform: scale(0.99); }
-.run-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-.opt-results { margin-top: 20px; }
-.opt-results-title {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-  margin-bottom: 10px;
-}
-.result-card {
-  background: var(--bg3);
-  border: 1px solid var(--border2);
-  padding: 12px 14px;
-  margin-bottom: 8px;
-  position: relative;
-}
-.result-card:first-child { border-color: var(--accent); }
-.result-rank {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--text-muted);
-  margin-bottom: 6px;
-}
-.result-card:first-child .result-rank { color: var(--accent); }
-.result-passives {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--text);
-  margin-bottom: 8px;
-  line-height: 1.6;
-}
-.result-passives span { color: var(--accent); }
-.result-stacks {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-.result-stack {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 600;
-}
-.result-stack.off { color: var(--off); }
-.result-stack.def { color: var(--def); }
-.result-stack.util { color: var(--util); }
-.result-stack.disabled { color: var(--text-muted); text-decoration: line-through; }
-.load-btn {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  background: none;
-  border: 1px solid var(--border2);
-  color: var(--text-dim);
-  padding: 4px 10px;
-  cursor: pointer;
-  transition: all 0.15s;
-  margin-left: auto;
-  display: block;
-  margin-top: 8px;
-}
-.load-btn:hover { border-color: var(--accent); color: var(--accent); }
-.opt-empty {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--text-muted);
-  text-align: center;
-  padding: 24px;
-  border: 1px dashed var(--border2);
-}
-.separator {
-  border: none;
-  border-top: 1px solid var(--border);
-  margin: 16px 0;
-}
-.no-saturate-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--text-dim);
-  margin-bottom: 12px;
-  cursor: pointer;
-}
-.no-saturate-row input { accent-color: var(--accent); }
-
-@media (max-width: 600px) {
-  .actives-grid { grid-template-columns: 1fr; }
-  .results-grid { grid-template-columns: 1fr; }
-  .mod-value { font-size: 40px; }
-  .opt-grid { grid-template-columns: 1fr; }
-  .opt-goal-row { grid-template-columns: 1fr 1fr; }
-  .threshold-row { grid-template-columns: 1fr; }
+@media(max-width:600px){
+  .actives-grid,.results-grid,.opt-grid,.threshold-row{grid-template-columns:1fr;}
+  .opt-goal-row{grid-template-columns:1fr 1fr;}
+  .mod-value{font-size:40px;}
 }
 </style>
 </head>
 <body>
 <div class="app">
 
-  <div class="header">
-    <div class="header-icon">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.18L20 8.5v7L12 19.82 4 15.5v-7L12 4.18zM12 7a5 5 0 100 10A5 5 0 0012 7zm0 2a3 3 0 110 6 3 3 0 010-6z"/>
-      </svg>
-    </div>
-    <div class="header-title">
-      <h1>Recombinant Calculator</h1>
-      <p>The Division 2 — Year 8 Season 1 · Rise Up</p>
-    </div>
-    <div class="base-display" id="base-display">
-      8 / 8 / 8
-      <span>BASE STACKS</span>
+<div class="header">
+  <div class="header-icon">
+    <svg viewBox="0 0 24 24"><path d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.18L20 8.5v7L12 19.82 4 15.5v-7L12 4.18zM12 7a5 5 0 100 10A5 5 0 0012 7zm0 2a3 3 0 110 6 3 3 0 010-6z"/></svg>
+  </div>
+  <div class="header-title">
+    <h1>Recombinant Calculator</h1>
+    <p>The Division 2 — Year 8 Season 1 · Rise Up</p>
+  </div>
+  <div class="base-display" id="base-display">8 / 8 / 8<span>BASE STACKS</span></div>
+</div>
+
+<!-- GLOBAL PANEL — shared by both tabs -->
+<div class="global-panel">
+  <div class="global-header">
+    <div class="global-title">Active Modifier Levels — cumulative · used by both tabs</div>
+    <div class="global-actions">
+      <button class="icon-btn copy" onclick="copyLink()">⎘ Copy Link</button>
+      <button class="icon-btn reset" onclick="resetAll()">↺ Reset</button>
     </div>
   </div>
-
-  <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('calculator')">Calculator</button>
-    <button class="tab-btn" onclick="switchTab('optimizer')">Optimizer</button>
-  </div>
-
-  <div id="tab-calculator" class="tab-content active">
-  <div class="section">
-    <div class="section-label">Active Modifiers — stack bonuses stack from all three</div>
-    <div class="panel">
-      <div class="actives-grid">
-        <div class="active-cell">
-          <div class="active-cell-name">Blackout Pulse</div>
-          <select id="lv-blackout">
-            <option value="0">Not unlocked</option>
-            <option value="1">Level 1 · +0</option>
-            <option value="2">Level 2 · +1</option>
-            <option value="3">Level 3 · +2</option>
-            <option value="4">Level 4 · +3</option>
-            <option value="5">Level 5 · +4</option>
-          </select>
-        </div>
-        <div class="active-cell">
-          <div class="active-cell-name">Cloud Armor</div>
-          <select id="lv-cloud">
-            <option value="0">Not unlocked</option>
-            <option value="1">Level 1 · +0</option>
-            <option value="2">Level 2 · +1</option>
-            <option value="3">Level 3 · +2</option>
-            <option value="4">Level 4 · +3</option>
-            <option value="5">Level 5 · +4</option>
-          </select>
-        </div>
-        <div class="active-cell">
-          <div class="active-cell-name">Optimize / Overload</div>
-          <select id="lv-optimize">
-            <option value="0">Not unlocked</option>
-            <option value="1">Level 1 · +0</option>
-            <option value="2">Level 2 · +1</option>
-            <option value="3">Level 3 · +2</option>
-            <option value="4">Level 4 · +3</option>
-            <option value="5">Level 5 · +4</option>
-          </select>
-        </div>
-      </div>
-      <div class="equipped-row">
-        <div>
-          <div class="active-cell-name" style="margin-bottom:6px;">Equipped Active</div>
-          <select id="equipped">
-            <option value="none">— None —</option>
-            <option value="blackout">Blackout Pulse</option>
-            <option value="cloud">Cloud Armor</option>
-            <option value="optimize">Optimize / Overload</option>
-          </select>
-          <div class="equipped-note" id="equipped-note"></div>
-        </div>
-      </div>
+  <div class="actives-grid">
+    <div class="active-cell">
+      <div class="active-cell-name">Blackout Pulse</div>
+      <select id="lv-blackout">
+        <option value="0">Not unlocked</option>
+        <option value="1">Level 1 · +0</option>
+        <option value="2">Level 2 · +1</option>
+        <option value="3">Level 3 · +2</option>
+        <option value="4">Level 4 · +3</option>
+        <option value="5">Level 5 · +4</option>
+      </select>
+    </div>
+    <div class="active-cell">
+      <div class="active-cell-name">Cloud Armor</div>
+      <select id="lv-cloud">
+        <option value="0">Not unlocked</option>
+        <option value="1">Level 1 · +0</option>
+        <option value="2">Level 2 · +1</option>
+        <option value="3">Level 3 · +2</option>
+        <option value="4">Level 4 · +3</option>
+        <option value="5">Level 5 · +4</option>
+      </select>
+    </div>
+    <div class="active-cell">
+      <div class="active-cell-name">Optimize / Overload</div>
+      <select id="lv-optimize">
+        <option value="0">Not unlocked</option>
+        <option value="1">Level 1 · +0</option>
+        <option value="2">Level 2 · +1</option>
+        <option value="3">Level 3 · +2</option>
+        <option value="4">Level 4 · +3</option>
+        <option value="5">Level 5 · +4</option>
+      </select>
     </div>
   </div>
+  <div class="equipped-row">
+    <div class="active-cell-name" style="margin-bottom:6px;">Equipped Active</div>
+    <select id="equipped">
+      <option value="none">— None —</option>
+      <option value="blackout">Blackout Pulse — EMP · radius 10m +0.5m/Offense stack · cooldown −1s/Defense stack (lv 3+)</option>
+      <option value="cloud">Cloud Armor — Repair armor 5% +0.2%/Defense stack /sec · 10s · cooldown −1s/Utility stack (lv 3+)</option>
+      <option value="optimize">Optimize / Overload — Reduces cooldowns 30% +0.8%/Utility stack · cooldown −1s/Offense stack (lv 3+)</option>
+    </select>
+    <div class="equipped-note" id="equipped-note"></div>
+  </div>
+</div>
 
-  <!-- PASSIVE MODIFIERS -->
+<div class="tabs">
+  <button class="tab-btn active" id="tab-btn-calculator" onclick="switchTab('calculator',this)">Calculator</button>
+  <button class="tab-btn" id="tab-btn-optimizer" onclick="switchTab('optimizer',this)">Optimizer</button>
+</div>
+
+<!-- ===== CALCULATOR TAB ===== -->
+<div id="tab-calculator" class="tab-content active">
+
   <div class="section">
     <div class="section-label">Passive Modifiers — slot order determines the final result</div>
     <div class="panel">
@@ -779,688 +319,604 @@ input[type=number]:focus { border-color: var(--accent); box-shadow: 0 0 0 1px va
     </div>
   </div>
 
-  <!-- RESULTS -->
   <div class="section">
     <div class="section-label">Result — final stacks</div>
     <div class="results-grid">
-
       <div class="module-card offense" id="card-off">
-        <div class="mod-header">
-          <div class="mod-name">Offense</div>
-          <div class="mod-lock" id="lock-off">LOCKED</div>
-        </div>
-        <div class="mod-stacks">
-          <div class="mod-value" id="res-off">8</div>
-          <div class="mod-base" id="base-bracket-off">[8]</div>
-        </div>
+        <div class="mod-header"><div class="mod-name">Offense</div><div class="mod-lock" id="lock-off">LOCKED</div></div>
+        <div class="mod-stacks"><div class="mod-value" id="res-off">8</div><div class="mod-base" id="base-bracket-off">[8]</div></div>
         <div class="mod-potency" id="pot-off"></div>
         <div class="mod-stat" id="attr-off-res">Weapon Handling</div>
         <div class="mod-stat-pct" id="pct-off">+8%</div>
         <div class="mod-rate" id="rate-off">1% per stack</div>
       </div>
-
       <div class="module-card defense" id="card-def">
-        <div class="mod-header">
-          <div class="mod-name">Defense</div>
-          <div class="mod-lock" id="lock-def">LOCKED</div>
-        </div>
-        <div class="mod-stacks">
-          <div class="mod-value" id="res-def">8</div>
-          <div class="mod-base" id="base-bracket-def">[8]</div>
-        </div>
+        <div class="mod-header"><div class="mod-name">Defense</div><div class="mod-lock" id="lock-def">LOCKED</div></div>
+        <div class="mod-stacks"><div class="mod-value" id="res-def">8</div><div class="mod-base" id="base-bracket-def">[8]</div></div>
         <div class="mod-potency" id="pot-def"></div>
         <div class="mod-stat" id="attr-def-res">Max Armor</div>
         <div class="mod-stat-pct" id="pct-def">+4%</div>
         <div class="mod-rate" id="rate-def">0.5% per stack</div>
       </div>
-
       <div class="module-card utility" id="card-util">
-        <div class="mod-header">
-          <div class="mod-name">Utility</div>
-          <div class="mod-lock" id="lock-util">LOCKED</div>
-        </div>
-        <div class="mod-stacks">
-          <div class="mod-value" id="res-util">8</div>
-          <div class="mod-base" id="base-bracket-util">[8]</div>
-        </div>
+        <div class="mod-header"><div class="mod-name">Utility</div><div class="mod-lock" id="lock-util">LOCKED</div></div>
+        <div class="mod-stacks"><div class="mod-value" id="res-util">8</div><div class="mod-base" id="base-bracket-util">[8]</div></div>
         <div class="mod-potency" id="pot-util"></div>
         <div class="mod-stat" id="attr-util-res">Skill Damage</div>
         <div class="mod-stat-pct" id="pct-util">+8%</div>
         <div class="mod-rate" id="rate-util">1% per stack</div>
       </div>
-
     </div>
-
     <div class="bars">
-      <div class="bar-row">
-        <div class="bar-label off" id="lbl-off">OFF 8</div>
-        <div class="bar-track"><div class="bar-fill off" id="bar-off" style="width:33%"></div></div>
-        <div class="bar-pct" id="barpct-off">33%</div>
-      </div>
-      <div class="bar-row">
-        <div class="bar-label def" id="lbl-def">DEF 8</div>
-        <div class="bar-track"><div class="bar-fill def" id="bar-def" style="width:33%"></div></div>
-        <div class="bar-pct" id="barpct-def">33%</div>
-      </div>
-      <div class="bar-row">
-        <div class="bar-label util" id="lbl-util">UTIL 8</div>
-        <div class="bar-track"><div class="bar-fill util" id="bar-util" style="width:33%"></div></div>
-        <div class="bar-pct" id="barpct-util">33%</div>
+      <div class="bar-row"><div class="bar-label off" id="lbl-off">OFF 8</div><div class="bar-track"><div class="bar-fill off" id="bar-off" style="width:33%"></div></div><div class="bar-pct" id="barpct-off">33%</div></div>
+      <div class="bar-row"><div class="bar-label def" id="lbl-def">DEF 8</div><div class="bar-track"><div class="bar-fill def" id="bar-def" style="width:33%"></div></div><div class="bar-pct" id="barpct-def">33%</div></div>
+      <div class="bar-row"><div class="bar-label util" id="lbl-util">UTIL 8</div><div class="bar-track"><div class="bar-fill util" id="bar-util" style="width:33%"></div></div><div class="bar-pct" id="barpct-util">33%</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Build History — last 5 builds · click to restore</div>
+    <div class="panel">
+      <div class="history-list" id="history-list">
+        <div class="history-empty">No history yet — select passives to start tracking.</div>
       </div>
     </div>
   </div>
 
-  </div><!-- end tab-calculator -->
+</div><!-- end tab-calculator -->
 
-  <div id="tab-optimizer" class="tab-content">
+<!-- ===== OPTIMIZER TAB ===== -->
+<div id="tab-optimizer" class="tab-content">
 
-    <div class="section">
-      <div class="section-label">Objective — what to maximize</div>
-      <div class="panel">
-        <div class="opt-goal-row">
-          <button class="goal-btn active-off" id="goal-off" onclick="setGoal('off')">Offense</button>
-          <button class="goal-btn" id="goal-def" onclick="setGoal('def')">Defense</button>
-          <button class="goal-btn" id="goal-util" onclick="setGoal('util')">Utility</button>
-          <button class="goal-btn" id="goal-bal" onclick="setGoal('bal')">Balanced</button>
-        </div>
+  <div class="section">
+    <div class="section-label">Objective — what to maximize</div>
+    <div class="panel">
+      <div class="opt-goal-row">
+        <button class="goal-btn active-off" id="goal-off" onclick="setGoal('off')">Offense</button>
+        <button class="goal-btn" id="goal-def" onclick="setGoal('def')">Defense</button>
+        <button class="goal-btn" id="goal-util" onclick="setGoal('util')">Utility</button>
+        <button class="goal-btn" id="goal-bal" onclick="setGoal('bal')">Balanced</button>
       </div>
     </div>
-
-    <div class="section">
-      <div class="section-label">Required attributes — check the stats you want to include</div>
-      <div class="panel">
-        <div class="threshold-row">
-          <div class="threshold-cell">
-            <div class="threshold-label off">Offense</div>
-            <label class="check-item" style="margin-top:6px;"><input type="checkbox" id="req-off-weapon_handling"> Weapon Handling</label>
-            <label class="check-item"><input type="checkbox" id="req-off-headshot"> Headshot Damage</label>
-            <label class="check-item"><input type="checkbox" id="req-off-magsize"> Magazine Size</label>
-          </div>
-          <div class="threshold-cell">
-            <div class="threshold-label def">Defense</div>
-            <label class="check-item" style="margin-top:6px;"><input type="checkbox" id="req-def-max_armor"> Max Armor</label>
-            <label class="check-item"><input type="checkbox" id="req-def-elites"> Protection from Elites</label>
-            <label class="check-item"><input type="checkbox" id="req-def-hazard"> Hazard Protection</label>
-          </div>
-          <div class="threshold-cell">
-            <div class="threshold-label util">Utility</div>
-            <label class="check-item" style="margin-top:6px;"><input type="checkbox" id="req-util-skill_damage"> Skill Damage</label>
-            <label class="check-item"><input type="checkbox" id="req-util-skillrepair"> Skill Repair</label>
-            <label class="check-item"><input type="checkbox" id="req-util-statuseffects"> Status Effects</label>
-          </div>
-        </div>
-        <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);margin-top:10px;">Leave all unchecked = no constraint on that module. Check one or more = build must include those attributes.</div>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-label">Minimum thresholds for the other modules</div>
-      <div class="panel">
-        <div class="threshold-row">
-          <div class="threshold-cell">
-            <div class="threshold-label off">Min Offense</div>
-            <input type="number" id="min-off" value="0" min="0" max="100">
-          </div>
-          <div class="threshold-cell">
-            <div class="threshold-label def">Min Defense</div>
-            <input type="number" id="min-def" value="0" min="0" max="100">
-          </div>
-          <div class="threshold-cell">
-            <div class="threshold-label util">Min Utility</div>
-            <input type="number" id="min-util" value="0" min="0" max="100">
-          </div>
-        </div>
-        <label class="no-saturate-row">
-          <input type="checkbox" id="no-saturate">
-          Exclude builds that disable a stat (Saturate)
-        </label>
-        <label class="no-saturate-row">
-          <input type="checkbox" id="no-converge">
-          Exclude builds that zero out two modules (Converge)
-        </label>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-label">Unlocked passives — check what you have</div>
-      <div class="panel">
-        <div class="opt-grid">
-          <div class="opt-group">
-            <div class="opt-group-title">Offense passives</div>
-            <div class="check-grid" id="checks-off"></div>
-          </div>
-          <div class="opt-group">
-            <div class="opt-group-title">Defense passives</div>
-            <div class="check-grid" id="checks-def"></div>
-          </div>
-        </div>
-        <hr class="separator">
-        <div class="opt-grid">
-          <div class="opt-group">
-            <div class="opt-group-title">Utility passives</div>
-            <div class="check-grid" id="checks-util"></div>
-          </div>
-          <div class="opt-group">
-            <div class="opt-group-title">Wildcards</div>
-            <div class="check-grid" id="checks-wild"></div>
-          </div>
-        </div>
-        <hr class="separator">
-        <div style="display:flex;gap:10px;margin-top:4px;">
-          <button class="load-btn" style="margin:0;" onclick="checkAll(true)">Check all</button>
-          <button class="load-btn" style="margin:0;" onclick="checkAll(false)">Uncheck all</button>
-        </div>
-      </div>
-    </div>
-
-    <button class="run-btn" id="run-btn" onclick="runOptimizer()">▶ Find Best Build</button>
-
-    <div class="opt-results" id="opt-results">
-      <div class="opt-empty">Configure your options above and click "Find Best Build"</div>
-    </div>
-
-  </div><!-- end tab-optimizer -->
-    <div class="footer-main">DIVISION 2 · RECOMBINANT CALCULATOR · Y8S1 RISE UP</div>
-    <div class="footer-credit">Tool created by <span>BillOTheWild</span></div>
   </div>
+
+  <div class="section">
+    <div class="section-label">Required attributes — check the stats you want</div>
+    <div class="panel">
+      <div class="threshold-row">
+        <div class="threshold-cell">
+          <div class="threshold-label off">Offense</div>
+          <label class="check-item" style="margin-top:6px;"><input type="checkbox" id="req-off-weapon_handling"> Weapon Handling</label>
+          <label class="check-item"><input type="checkbox" id="req-off-headshot"> Headshot Damage</label>
+          <label class="check-item"><input type="checkbox" id="req-off-magsize"> Magazine Size</label>
+        </div>
+        <div class="threshold-cell">
+          <div class="threshold-label def">Defense</div>
+          <label class="check-item" style="margin-top:6px;"><input type="checkbox" id="req-def-max_armor"> Max Armor</label>
+          <label class="check-item"><input type="checkbox" id="req-def-elites"> Protection from Elites</label>
+          <label class="check-item"><input type="checkbox" id="req-def-hazard"> Hazard Protection</label>
+        </div>
+        <div class="threshold-cell">
+          <div class="threshold-label util">Utility</div>
+          <label class="check-item" style="margin-top:6px;"><input type="checkbox" id="req-util-skill_damage"> Skill Damage</label>
+          <label class="check-item"><input type="checkbox" id="req-util-skillrepair"> Skill Repair</label>
+          <label class="check-item"><input type="checkbox" id="req-util-statuseffects"> Status Effects</label>
+        </div>
+      </div>
+      <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);">Leave all unchecked = no constraint. Check one or more = build must include those attributes.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Minimum thresholds &amp; filters</div>
+    <div class="panel">
+      <div class="threshold-row">
+        <div class="threshold-cell"><div class="threshold-label off">Min Offense stacks</div><input type="number" id="min-off" value="0" min="0" max="100"></div>
+        <div class="threshold-cell"><div class="threshold-label def">Min Defense stacks</div><input type="number" id="min-def" value="0" min="0" max="100"></div>
+        <div class="threshold-cell"><div class="threshold-label util">Min Utility stacks</div><input type="number" id="min-util" value="0" min="0" max="100"></div>
+      </div>
+      <label class="filter-row"><input type="checkbox" id="no-saturate"> Exclude builds that disable a stat (Saturate)</label>
+      <label class="filter-row"><input type="checkbox" id="no-converge"> Exclude builds that zero out two modules (Converge)</label>
+      <label class="filter-row"><input type="checkbox" id="no-stabilize"> Exclude builds that lock stacks (Stabilize)</label>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Unlocked passives — check what you have</div>
+    <div class="panel">
+      <div class="opt-grid">
+        <div class="opt-group"><div class="opt-group-title">Offense</div><div class="check-grid" id="checks-off"></div></div>
+        <div class="opt-group"><div class="opt-group-title">Defense</div><div class="check-grid" id="checks-def"></div></div>
+      </div>
+      <hr class="separator">
+      <div class="opt-grid">
+        <div class="opt-group"><div class="opt-group-title">Utility</div><div class="check-grid" id="checks-util"></div></div>
+        <div class="opt-group"><div class="opt-group-title">Wildcards</div><div class="check-grid" id="checks-wild"></div></div>
+      </div>
+      <hr class="separator">
+      <div style="display:flex;gap:10px;">
+        <button class="load-btn" style="margin:0;" onclick="checkAll(true)">Check all</button>
+        <button class="load-btn" style="margin:0;" onclick="checkAll(false)">Uncheck all</button>
+      </div>
+    </div>
+  </div>
+
+  <button class="run-btn" id="run-btn" onclick="runOptimizer()">▶ Find Best Build</button>
+  <div class="opt-stats" id="opt-stats"></div>
+  <div class="opt-results" id="opt-results">
+    <div class="opt-empty">Configure your options above and click "Find Best Build"</div>
+  </div>
+
+</div><!-- end tab-optimizer -->
+
+<div class="footer">
+  <div class="footer-main">DIVISION 2 · RECOMBINANT CALCULATOR · Y8S1 RISE UP</div>
+  <div class="footer-credit">Tool created by <span>BillOTheWild</span></div>
 </div>
 
+</div><!-- end app -->
+<div class="toast" id="toast"></div>
+
 <script>
+// ================================================================
+// PASSIVE LIST
+// ================================================================
 const PASSIVE_LIST = [
-  {id:'none', label:'— None —', apply:null, desc:''},
+  {id:'none', label:'— None —', desc:'', apply:null},
   // OFFENSE
-  {id:'amp_off',      label:'Amplify (Offense)',      desc:'Offense +5', apply:(s)=>{if(!s.lock_off)s.off+=5;}},
-  {id:'consume_off',  label:'Consume (Offense)',      desc:'Offense +10 · Defense −5 · Utility −5', apply:(s)=>{if(!s.lock_off)s.off+=10;if(!s.lock_def)s.def-=5;if(!s.lock_util)s.util-=5;}},
-  {id:'saturate_off', label:'Saturate (Offense)',     desc:'Offense +25 · Offense stat disabled', apply:(s)=>{if(!s.lock_off)s.off+=25;s.sat_off=true;}},
-  {id:'split_off',    label:'Split (Offense)',        desc:'Offense −15 · Defense +10 · Utility +10', apply:(s)=>{if(!s.lock_off)s.off-=15;if(!s.lock_def)s.def+=10;if(!s.lock_util)s.util+=10;}},
-  {id:'pivot_off',    label:'Pivot (Offense)',        desc:'Lowest module +15 · Offense −10 (no effect if Offense is lowest, or Def/Util tied for lowest)', apply:(s)=>{
-    const mn=Math.min(s.off,s.def,s.util);
-    if(s.off===mn)return;if(s.def===mn&&s.util===mn)return;
-    if(s.def===mn&&!s.lock_def)s.def+=15;else if(s.util===mn&&!s.lock_util)s.util+=15;
-    if(!s.lock_off)s.off-=10;
-  }},
-  {id:'compress_off', label:'Compress (Offense)',     desc:'Offense −10 · Offense potency ×1.5', apply:(s)=>{if(!s.lock_off){s.off-=10;s.pot_off*=1.5;}}},
-  {id:'conv1_off',    label:'Convert 1 (Offense)',    desc:'Offense → Headshot Damage (3%/stack)', apply:(s)=>{s.conv_off.push('headshot');}},
-  {id:'conv2_off',    label:'Convert 2 (Offense)',    desc:'Offense → Magazine Size (1%/stack)', apply:(s)=>{s.conv_off.push('magsize');}},
-  {id:'stab_off',     label:'Stabilize (Offense)',    desc:'Offense stacks locked for subsequent passives', apply:(s)=>{s.lock_off=true;}},
-  {id:'invert_off',   label:'Invert (Offense)',       desc:'Swap Offense with the highest module (no effect if Offense is already highest, or Def/Util tied for highest)', apply:(s)=>{
-    const mx=Math.max(s.off,s.def,s.util);
-    if(s.off===mx)return;if(s.def===mx&&s.util===mx)return;
-    if(s.def===mx){[s.off,s.def]=[s.def,s.off];}else{[s.off,s.util]=[s.util,s.off];}
-  }},
+  {id:'amp_off',      label:'Amplify (Offense)',    desc:'Offense +5',                                                    apply:(s)=>{if(!s.lock_off)s.off+=5;}},
+  {id:'consume_off',  label:'Consume (Offense)',    desc:'Offense +10 · Defense −5 · Utility −5',                        apply:(s)=>{if(!s.lock_off)s.off+=10;if(!s.lock_def)s.def-=5;if(!s.lock_util)s.util-=5;}},
+  {id:'saturate_off', label:'Saturate (Offense)',   desc:'Offense +25 · Offense stat disabled',                          apply:(s)=>{if(!s.lock_off)s.off+=25;s.sat_off=true;}},
+  {id:'split_off',    label:'Split (Offense)',      desc:'Offense −15 · Defense +10 · Utility +10',                      apply:(s)=>{if(!s.lock_off)s.off-=15;if(!s.lock_def)s.def+=10;if(!s.lock_util)s.util+=10;}},
+  {id:'pivot_off',    label:'Pivot (Offense)',      desc:'Lowest module +15 · Offense −10 (no effect if Offense is lowest, or Def/Util tied)',
+    apply:(s)=>{const mn=Math.min(s.off,s.def,s.util);if(s.off===mn)return;if(s.def===mn&&s.util===mn)return;if(s.def===mn&&!s.lock_def)s.def+=15;else if(s.util===mn&&!s.lock_util)s.util+=15;if(!s.lock_off)s.off-=10;}},
+  {id:'compress_off', label:'Compress (Offense)',   desc:'Offense −10 · Offense potency ×1.5',                           apply:(s)=>{if(!s.lock_off){s.off-=10;s.pot_off*=1.5;}}},
+  {id:'conv1_off',    label:'Convert 1 (Offense)',  desc:'Offense → Headshot Damage (3%/stack)',                          apply:(s)=>{s.conv_off.push('headshot');}},
+  {id:'conv2_off',    label:'Convert 2 (Offense)',  desc:'Offense → Magazine Size (1%/stack)',                            apply:(s)=>{s.conv_off.push('magsize');}},
+  {id:'stab_off',     label:'Stabilize (Offense)',  desc:'Offense stacks locked for subsequent passives',                 apply:(s)=>{s.lock_off=true;}},
+  {id:'invert_off',   label:'Invert (Offense)',     desc:'Swap Offense with the highest module (no effect if Offense is already highest, or Def/Util tied)',
+    apply:(s)=>{const mx=Math.max(s.off,s.def,s.util);if(s.off===mx)return;if(s.def===mx&&s.util===mx)return;if(s.def===mx){[s.off,s.def]=[s.def,s.off];}else{[s.off,s.util]=[s.util,s.off];}}},
   // DEFENSE
-  {id:'amp_def',      label:'Amplify (Defense)',      desc:'Defense +5', apply:(s)=>{if(!s.lock_def)s.def+=5;}},
-  {id:'consume_def',  label:'Consume (Defense)',      desc:'Defense +10 · Offense −5 · Utility −5', apply:(s)=>{if(!s.lock_def)s.def+=10;if(!s.lock_off)s.off-=5;if(!s.lock_util)s.util-=5;}},
-  {id:'saturate_def', label:'Saturate (Defense)',     desc:'Defense +25 · Defense stat disabled', apply:(s)=>{if(!s.lock_def)s.def+=25;s.sat_def=true;}},
-  {id:'split_def',    label:'Split (Defense)',        desc:'Defense −15 · Offense +10 · Utility +10', apply:(s)=>{if(!s.lock_def)s.def-=15;if(!s.lock_off)s.off+=10;if(!s.lock_util)s.util+=10;}},
-  {id:'pivot_def',    label:'Pivot (Defense)',        desc:'Lowest module +15 · Defense −10 (no effect if Defense is lowest, or Off/Util tied for lowest)', apply:(s)=>{
-    const mn=Math.min(s.off,s.def,s.util);
-    if(s.def===mn)return;if(s.off===mn&&s.util===mn)return;
-    if(s.off===mn&&!s.lock_off)s.off+=15;else if(s.util===mn&&!s.lock_util)s.util+=15;
-    if(!s.lock_def)s.def-=10;
-  }},
-  {id:'compress_def', label:'Compress (Defense)',     desc:'Defense −10 · Defense potency ×1.5', apply:(s)=>{if(!s.lock_def){s.def-=10;s.pot_def*=1.5;}}},
-  {id:'conv1_def',    label:'Convert 1 (Defense)',    desc:'Defense → Protection from Elites (0.5%/stack)', apply:(s)=>{s.conv_def.push('elites');}},
-  {id:'conv2_def',    label:'Convert 2 (Defense)',    desc:'Defense → Hazard Protection (1%/stack)', apply:(s)=>{s.conv_def.push('hazard');}},
-  {id:'stab_def',     label:'Stabilize (Defense)',    desc:'Defense stacks locked for subsequent passives', apply:(s)=>{s.lock_def=true;}},
-  {id:'invert_def',   label:'Invert (Defense)',       desc:'Swap Defense with the highest module (no effect if Defense is already highest, or Off/Util tied for highest)', apply:(s)=>{
-    const mx=Math.max(s.off,s.def,s.util);
-    if(s.def===mx)return;if(s.off===mx&&s.util===mx)return;
-    if(s.off===mx){[s.def,s.off]=[s.off,s.def];}else{[s.def,s.util]=[s.util,s.def];}
-  }},
+  {id:'amp_def',      label:'Amplify (Defense)',    desc:'Defense +5',                                                    apply:(s)=>{if(!s.lock_def)s.def+=5;}},
+  {id:'consume_def',  label:'Consume (Defense)',    desc:'Defense +10 · Offense −5 · Utility −5',                        apply:(s)=>{if(!s.lock_def)s.def+=10;if(!s.lock_off)s.off-=5;if(!s.lock_util)s.util-=5;}},
+  {id:'saturate_def', label:'Saturate (Defense)',   desc:'Defense +25 · Defense stat disabled',                          apply:(s)=>{if(!s.lock_def)s.def+=25;s.sat_def=true;}},
+  {id:'split_def',    label:'Split (Defense)',      desc:'Defense −15 · Offense +10 · Utility +10',                      apply:(s)=>{if(!s.lock_def)s.def-=15;if(!s.lock_off)s.off+=10;if(!s.lock_util)s.util+=10;}},
+  {id:'pivot_def',    label:'Pivot (Defense)',      desc:'Lowest module +15 · Defense −10 (no effect if Defense is lowest, or Off/Util tied)',
+    apply:(s)=>{const mn=Math.min(s.off,s.def,s.util);if(s.def===mn)return;if(s.off===mn&&s.util===mn)return;if(s.off===mn&&!s.lock_off)s.off+=15;else if(s.util===mn&&!s.lock_util)s.util+=15;if(!s.lock_def)s.def-=10;}},
+  {id:'compress_def', label:'Compress (Defense)',   desc:'Defense −10 · Defense potency ×1.5',                           apply:(s)=>{if(!s.lock_def){s.def-=10;s.pot_def*=1.5;}}},
+  {id:'conv1_def',    label:'Convert 1 (Defense)',  desc:'Defense → Protection from Elites (0.5%/stack)',                 apply:(s)=>{s.conv_def.push('elites');}},
+  {id:'conv2_def',    label:'Convert 2 (Defense)',  desc:'Defense → Hazard Protection (1%/stack)',                        apply:(s)=>{s.conv_def.push('hazard');}},
+  {id:'stab_def',     label:'Stabilize (Defense)',  desc:'Defense stacks locked for subsequent passives',                 apply:(s)=>{s.lock_def=true;}},
+  {id:'invert_def',   label:'Invert (Defense)',     desc:'Swap Defense with the highest module (no effect if Defense is already highest, or Off/Util tied)',
+    apply:(s)=>{const mx=Math.max(s.off,s.def,s.util);if(s.def===mx)return;if(s.off===mx&&s.util===mx)return;if(s.off===mx){[s.def,s.off]=[s.off,s.def];}else{[s.def,s.util]=[s.util,s.def];}}},
   // UTILITY
-  {id:'amp_util',     label:'Amplify (Utility)',      desc:'Utility +5', apply:(s)=>{if(!s.lock_util)s.util+=5;}},
-  {id:'consume_util', label:'Consume (Utility)',      desc:'Utility +10 · Offense −5 · Defense −5', apply:(s)=>{if(!s.lock_util)s.util+=10;if(!s.lock_off)s.off-=5;if(!s.lock_def)s.def-=5;}},
-  {id:'saturate_util',label:'Saturate (Utility)',     desc:'Utility +25 · Utility stat disabled', apply:(s)=>{if(!s.lock_util)s.util+=25;s.sat_util=true;}},
-  {id:'split_util',   label:'Split (Utility)',        desc:'Utility −15 · Offense +10 · Defense +10', apply:(s)=>{if(!s.lock_util)s.util-=15;if(!s.lock_off)s.off+=10;if(!s.lock_def)s.def+=10;}},
-  {id:'pivot_util',   label:'Pivot (Utility)',        desc:'Lowest module +15 · Utility −10 (no effect if Utility is lowest, or Off/Def tied for lowest)', apply:(s)=>{
-    const mn=Math.min(s.off,s.def,s.util);
-    if(s.util===mn)return;if(s.off===mn&&s.def===mn)return;
-    if(s.off===mn&&!s.lock_off)s.off+=15;else if(s.def===mn&&!s.lock_def)s.def+=15;
-    if(!s.lock_util)s.util-=10;
-  }},
-  {id:'compress_util',label:'Compress (Utility)',     desc:'Utility −10 · Utility potency ×1.5', apply:(s)=>{if(!s.lock_util){s.util-=10;s.pot_util*=1.5;}}},
-  {id:'conv1_util',   label:'Convert 1 (Utility)',    desc:'Utility → Skill Repair (1%/stack)', apply:(s)=>{s.conv_util.push('skillrepair');}},
-  {id:'conv2_util',   label:'Convert 2 (Utility)',    desc:'Utility → Status Effects (1%/stack)', apply:(s)=>{s.conv_util.push('statuseffects');}},
-  {id:'stab_util',    label:'Stabilize (Utility)',    desc:'Utility stacks locked for subsequent passives', apply:(s)=>{s.lock_util=true;}},
-  {id:'invert_util',  label:'Invert (Utility)',       desc:'Swap Utility with the highest module (no effect if Utility is already highest, or Off/Def tied for highest)', apply:(s)=>{
-    const mx=Math.max(s.off,s.def,s.util);
-    if(s.util===mx)return;if(s.off===mx&&s.def===mx)return;
-    if(s.off===mx){[s.util,s.off]=[s.off,s.util];}else{[s.util,s.def]=[s.def,s.util];}
-  }},
+  {id:'amp_util',     label:'Amplify (Utility)',    desc:'Utility +5',                                                    apply:(s)=>{if(!s.lock_util)s.util+=5;}},
+  {id:'consume_util', label:'Consume (Utility)',    desc:'Utility +10 · Offense −5 · Defense −5',                        apply:(s)=>{if(!s.lock_util)s.util+=10;if(!s.lock_off)s.off-=5;if(!s.lock_def)s.def-=5;}},
+  {id:'saturate_util',label:'Saturate (Utility)',   desc:'Utility +25 · Utility stat disabled',                          apply:(s)=>{if(!s.lock_util)s.util+=25;s.sat_util=true;}},
+  {id:'split_util',   label:'Split (Utility)',      desc:'Utility −15 · Offense +10 · Defense +10',                      apply:(s)=>{if(!s.lock_util)s.util-=15;if(!s.lock_off)s.off+=10;if(!s.lock_def)s.def+=10;}},
+  {id:'pivot_util',   label:'Pivot (Utility)',      desc:'Lowest module +15 · Utility −10 (no effect if Utility is lowest, or Off/Def tied)',
+    apply:(s)=>{const mn=Math.min(s.off,s.def,s.util);if(s.util===mn)return;if(s.off===mn&&s.def===mn)return;if(s.off===mn&&!s.lock_off)s.off+=15;else if(s.def===mn&&!s.lock_def)s.def+=15;if(!s.lock_util)s.util-=10;}},
+  {id:'compress_util',label:'Compress (Utility)',   desc:'Utility −10 · Utility potency ×1.5',                           apply:(s)=>{if(!s.lock_util){s.util-=10;s.pot_util*=1.5;}}},
+  {id:'conv1_util',   label:'Convert 1 (Utility)',  desc:'Utility → Skill Repair (1%/stack)',                             apply:(s)=>{s.conv_util.push('skillrepair');}},
+  {id:'conv2_util',   label:'Convert 2 (Utility)',  desc:'Utility → Status Effects (1%/stack)',                           apply:(s)=>{s.conv_util.push('statuseffects');}},
+  {id:'stab_util',    label:'Stabilize (Utility)',  desc:'Utility stacks locked for subsequent passives',                 apply:(s)=>{s.lock_util=true;}},
+  {id:'invert_util',  label:'Invert (Utility)',     desc:'Swap Utility with the highest module (no effect if Utility is already highest, or Off/Def tied)',
+    apply:(s)=>{const mx=Math.max(s.off,s.def,s.util);if(s.util===mx)return;if(s.off===mx&&s.def===mx)return;if(s.off===mx){[s.util,s.off]=[s.off,s.util];}else{[s.util,s.def]=[s.def,s.util];}}},
   // WILDCARDS
-  {id:'cascade',  label:'Cascade (Wildcard)',  desc:'Highest module disabled · other two each +50% of its value (rounded up) · no effect if 2 tied for highest', apply:(s)=>{
-    const mx=Math.max(s.off,s.def,s.util);
-    if([s.off===mx,s.def===mx,s.util===mx].filter(Boolean).length>1)return;
-    const h=Math.ceil(mx/2);
-    if(s.off===mx){s.sat_off=true;s.def+=h;s.util+=h;}
-    else if(s.def===mx){s.sat_def=true;s.off+=h;s.util+=h;}
-    else{s.sat_util=true;s.off+=h;s.def+=h;}
-  }},
-  {id:'converge', label:'Converge (Wildcard)', desc:'Lowest module +average of the other two (rounded up) · other two → 0 · no effect if 2 tied for lowest', apply:(s)=>{
-    const mn=Math.min(s.off,s.def,s.util);
-    if([s.off===mn,s.def===mn,s.util===mn].filter(Boolean).length>1)return;
-    if(s.off===mn){const a=Math.ceil((s.def+s.util)/2);s.off+=a;s.def=0;s.util=0;}
-    else if(s.def===mn){const a=Math.ceil((s.off+s.util)/2);s.def+=a;s.off=0;s.util=0;}
-    else{const a=Math.ceil((s.off+s.def)/2);s.util+=a;s.off=0;s.def=0;}
-  }},
-  {id:'equalize', label:'Equalize (Wildcard)', desc:'All modules → middle-value stack · no effect if middle = max or middle = min', apply:(s)=>{
-    const sorted=[s.off,s.def,s.util].slice().sort((a,b)=>a-b);
-    const med=sorted[1];
-    if(med===sorted[0]||med===sorted[2])return;
-    s.off=med;s.def=med;s.util=med;
-  }},
-  {id:'nullify',  label:'Nullify (Wildcard)',  desc:'Reverses all changes to the lowest module (Invert excluded) · no effect if 2 tied for lowest', apply:(s)=>{
-    const mn=Math.min(s.off,s.def,s.util);
-    if([s.off===mn,s.def===mn,s.util===mn].filter(Boolean).length>1)return;
-    const b=s._base;
-    if(s.off===mn){const d=s.off-b;s.off=b-d;}
-    else if(s.def===mn){const d=s.def-b;s.def=b-d;}
-    else{const d=s.util-b;s.util=b-d;}
-  }},
+  {id:'cascade',  label:'Cascade (Wildcard)',  desc:'Highest module disabled · other two each +50% of its value (rounded up) · no effect if 2 tied for highest',
+    apply:(s)=>{const mx=Math.max(s.off,s.def,s.util);if([s.off===mx,s.def===mx,s.util===mx].filter(Boolean).length>1)return;const h=Math.ceil(mx/2);if(s.off===mx){s.sat_off=true;s.def+=h;s.util+=h;}else if(s.def===mx){s.sat_def=true;s.off+=h;s.util+=h;}else{s.sat_util=true;s.off+=h;s.def+=h;}}},
+  {id:'converge', label:'Converge (Wildcard)', desc:'Lowest module +average of the other two (rounded up) · other two → 0 · no effect if 2 tied for lowest',
+    apply:(s)=>{const mn=Math.min(s.off,s.def,s.util);if([s.off===mn,s.def===mn,s.util===mn].filter(Boolean).length>1)return;if(s.off===mn){const a=Math.ceil((s.def+s.util)/2);s.off+=a;s.def=0;s.util=0;}else if(s.def===mn){const a=Math.ceil((s.off+s.util)/2);s.def+=a;s.off=0;s.util=0;}else{const a=Math.ceil((s.off+s.def)/2);s.util+=a;s.off=0;s.def=0;}}},
+  {id:'equalize', label:'Equalize (Wildcard)', desc:'All modules → middle-value stack · no effect if middle = max or middle = min',
+    apply:(s)=>{const sorted=[s.off,s.def,s.util].slice().sort((a,b)=>a-b);const med=sorted[1];if(med===sorted[0]||med===sorted[2])return;s.off=med;s.def=med;s.util=med;}},
+  {id:'nullify',  label:'Nullify (Wildcard)',  desc:'Reverses all changes to the lowest module (Invert excluded) · no effect if 2 tied for lowest',
+    apply:(s)=>{const mn=Math.min(s.off,s.def,s.util);if([s.off===mn,s.def===mn,s.util===mn].filter(Boolean).length>1)return;const b=s._base;if(s.off===mn){const d=s.off-b;s.off=b-d;}else if(s.def===mn){const d=s.def-b;s.def=b-d;}else{const d=s.util-b;s.util=b-d;}}},
 ];
 
-// Stat definitions: [label, rate per stack, unit]
+// ================================================================
+// STAT DEFINITIONS & CONSTANTS
+// ================================================================
 const STAT_DEFS = {
-  // Offense defaults & converts
-  weapon_handling: ['Weapon Handling',  1,    '%'],
-  headshot:        ['Headshot Damage',  3,    '%'],
-  magsize:         ['Magazine Size',    1,    '%'],
-  // Defense defaults & converts
-  max_armor:       ['Max Armor',           0.5,  '%'],
-  elites:          ['Protection from Elites', 0.5, '%'],
-  hazard:          ['Hazard Protection',   1,    '%'],
-  // Utility defaults & converts
-  skill_damage:    ['Skill Damage',        1,    '%'],
-  skillrepair:     ['Skill Repair',        1,    '%'],
-  statuseffects:   ['Status Effects',      1,    '%'],
+  weapon_handling:['Weapon Handling', 1],
+  headshot:       ['Headshot Damage', 3],
+  magsize:        ['Magazine Size',   1],
+  max_armor:      ['Max Armor',       0.5],
+  elites:         ['Protection from Elites', 0.5],
+  hazard:         ['Hazard Protection', 1],
+  skill_damage:   ['Skill Damage',    1],
+  skillrepair:    ['Skill Repair',    1],
+  statuseffects:  ['Status Effects',  1],
 };
-
-const MODULE_DEFAULTS = { off:'weapon_handling', def:'max_armor', util:'skill_damage' };
-
+const MOD_DEFAULT = {off:'weapon_handling', def:'max_armor', util:'skill_damage'};
 const EQUIPPED_NOTES = {
-  none: '',
-  blackout: 'EMP · radius <em>10m +0.5m/Offense stack</em> · cooldown <em>−1s/Defense stack</em> (lv 3+)',
-  cloud:    'Repair armor <em>5% +0.2%/Defense stack</em> /sec · 10s · cooldown <em>−1s/Utility stack</em> (lv 3+)',
-  optimize: 'Reduces active cooldowns <em>30% +0.8%/Utility stack</em> · cooldown <em>−1s/Offense stack</em> (lv 3+)',
+  none:'',
+  blackout:'EMP · radius <em>10m +0.5m/Offense stack</em> · cooldown <em>−1s/Defense stack</em> (lv 3+)',
+  cloud:   'Repair armor <em>5% +0.2%/Defense stack</em> /sec · 10s · cooldown <em>−1s/Utility stack</em> (lv 3+)',
+  optimize:'Reduces cooldowns <em>30% +0.8%/Utility stack</em> · cooldown <em>−1s/Offense stack</em> (lv 3+)',
 };
 
-// Populate passive selects with description in label
-document.querySelectorAll('.psel').forEach(sel => {
-  PASSIVE_LIST.forEach(p => {
-    const o = document.createElement('option');
-    o.value = p.id;
-    o.textContent = p.desc ? `${p.label}  —  ${p.desc}` : p.label;
-    sel.appendChild(o);
-  });
-  sel.addEventListener('change', update);
-});
-['lv-blackout','lv-cloud','lv-optimize','equipped'].forEach(id =>
-  document.getElementById(id).addEventListener('change', update)
-);
-
-// IDs that conflict with each other (same module converts — last wins, so both allowed but warn)
-// Only block truly identical IDs
-function refreshDuplicateBlocking() {
-  const sels = Array.from(document.querySelectorAll('.psel'));
-  sels.forEach((sel, i) => {
-    const usedInPrevious = sels
-      .slice(0, i)
-      .map(s => s.value)
-      .filter(v => v !== 'none');
-    Array.from(sel.options).forEach(opt => {
-      if (opt.value === 'none') { opt.disabled = false; return; }
-      // Only block exact duplicate IDs — different passives are always allowed
-      opt.disabled = usedInPrevious.includes(opt.value);
-    });
-  });
+// ================================================================
+// STATE ENGINE
+// ================================================================
+function makeState(base) {
+  return {off:base,def:base,util:base,pot_off:1,pot_def:1,pot_util:1,
+    lock_off:false,lock_def:false,lock_util:false,
+    sat_off:false,sat_def:false,sat_util:false,
+    conv_off:[],conv_def:[],conv_util:[],_base:base};
 }
 
-function lvBonus(id) {
-  const v = parseInt(document.getElementById(id).value);
-  return Math.max(0, v - 1);
-}
-
-function update() {
-  refreshDuplicateBlocking();
-
-  const totalBonus = lvBonus('lv-blackout') + lvBonus('lv-cloud') + lvBonus('lv-optimize');
-  const base = 8 + totalBonus;
-
-  document.getElementById('base-display').innerHTML = `${base} / ${base} / ${base}<span>BASE STACKS (8 + ${totalBonus})</span>`;
-  document.getElementById('base-bracket-off').textContent = `[${base}]`;
-  document.getElementById('base-bracket-def').textContent = `[${base}]`;
-  document.getElementById('base-bracket-util').textContent = `[${base}]`;
-
-  const equippedId = document.getElementById('equipped').value;
-  document.getElementById('equipped-note').innerHTML = EQUIPPED_NOTES[equippedId] || '';
-
-  const s = {
-    off: base, def: base, util: base,
-    pot_off: 1, pot_def: 1, pot_util: 1,
-    lock_off: false, lock_def: false, lock_util: false,
-    sat_off: false, sat_def: false, sat_util: false,
-    conv_off: [], conv_def: [], conv_util: [],
-    _base: base,
-  };
-  const flags = { cascade:false, converge:false, equalize:false, nullify:false };
-
-  document.querySelectorAll('.psel').forEach((sel, i) => {
-    const p = PASSIVE_LIST.find(x => x.id === sel.value);
-    const descEl = document.querySelector(`.passive-desc[data-slot="${i}"]`);
-    if (!p || p.id === 'none') { descEl.textContent = ''; return; }
-    descEl.textContent = `› ${p.desc}`;
-    if (flags.hasOwnProperty(p.id)) flags[p.id] = true;
-    if (p.apply) p.apply(s);
-  });
-
-  s.off = Math.max(0, s.off);
-  s.def = Math.max(0, s.def);
-  s.util = Math.max(0, s.util);
-
-  // Helper: get all active stats for a module (default + all converts, last convert wins for attribute)
-  function getStats(convArr, defaultStat) {
-    if (convArr.length === 0) return [defaultStat];
-    return convArr; // all converts active — last one wins for display, show all
-  }
-
-  const statsOff  = getStats(s.conv_off,  MODULE_DEFAULTS.off);
-  const statsDef  = getStats(s.conv_def,  MODULE_DEFAULTS.def);
-  const statsUtil = getStats(s.conv_util, MODULE_DEFAULTS.util);
-
-  // Calculate % values with potency — use last convert (it overrides previous)
-  const calcPct = (stacks, potency, statKey) => {
-    const [, rate] = STAT_DEFS[statKey];
-    return (stacks * rate * potency).toFixed(1);
-  };
-
-  // Update result cards
-  const modules = [
-    { m:'off', stats:statsOff,  sat:s.sat_off,  lock:s.lock_off,  pot:s.pot_off,  val:s.off },
-    { m:'def', stats:statsDef,  sat:s.sat_def,  lock:s.lock_def,  pot:s.pot_def,  val:s.def },
-    { m:'util',stats:statsUtil, sat:s.sat_util, lock:s.lock_util, pot:s.pot_util, val:s.util },
-  ];
-
-  modules.forEach(({m, stats, sat, lock, pot, val}) => {
-    document.getElementById(`res-${m}`).textContent = val;
-    document.getElementById(`pot-${m}`).textContent = pot > 1 ? `potency ×${pot.toFixed(1)}` : '';
-
-    if (sat) {
-      document.getElementById(`attr-${m}-res`).textContent = '⛔ stat disabled';
-      document.getElementById(`pct-${m}`).textContent = '—';
-      document.getElementById(`rate-${m}`).textContent = '';
-    } else {
-      document.getElementById(`attr-${m}-res`).textContent = stats.map(sk => STAT_DEFS[sk][0]).join(' + ');
-      document.getElementById(`pct-${m}`).textContent = stats.map(sk => `+${calcPct(val, pot, sk)}%`).join(' / ');
-      document.getElementById(`rate-${m}`).textContent = stats.map(sk => `${STAT_DEFS[sk][1]}%/stack`).join(' · ') + (pot > 1 ? ` · ×${pot.toFixed(1)} potency` : '');
-    }
-
-    document.getElementById(`lock-${m}`).classList.toggle('visible', lock);
-    document.getElementById(`card-${m}`).classList.toggle('mod-card-disabled', sat);
-    document.getElementById(`card-${m}`).classList.toggle('active-glow', !sat && val > base);
-  });
-
-  // Bars
-  const tot = (s.off + s.def + s.util) || 1;
-  [['off','OFF'],['def','DEF'],['util','UTIL']].forEach(([m, lbl]) => {
-    const v = s[m];
-    const pct = Math.round(v / tot * 100);
-    document.getElementById(`bar-${m}`).style.width = pct + '%';
-    document.getElementById(`lbl-${m}`).textContent = `${lbl} ${v}`;
-    document.getElementById(`barpct-${m}`).textContent = pct + '%';
-  });
-
-  // Notices
-  Object.keys(flags).forEach(k => {
-    document.getElementById(`notice-${k}`).style.display = flags[k] ? 'block' : 'none';
-  });
-}
-
-update();
-
-// ===================== TABS =====================
-function switchTab(name) {
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  event.currentTarget.classList.add('active');
-}
-
-// ===================== OPTIMIZER =====================
-let currentGoal = 'off';
-
-function setGoal(g) {
-  currentGoal = g;
-  ['off','def','util','bal'].forEach(x => {
-    const b = document.getElementById('goal-' + x);
-    b.className = 'goal-btn' + (x === g ? ` active-${x}` : '');
-  });
-}
-
-// Build check lists from PASSIVE_LIST
-const PASSIVE_GROUPS = {
-  off:  PASSIVE_LIST.filter(p => p.id !== 'none' && p.id.endsWith('_off')),
-  def:  PASSIVE_LIST.filter(p => p.id !== 'none' && p.id.endsWith('_def')),
-  util: PASSIVE_LIST.filter(p => p.id !== 'none' && p.id.endsWith('_util')),
-  wild: PASSIVE_LIST.filter(p => ['cascade','converge','equalize','nullify'].includes(p.id)),
-};
-
-function buildChecks() {
-  Object.entries(PASSIVE_GROUPS).forEach(([grp, list]) => {
-    const container = document.getElementById('checks-' + grp);
-    list.forEach(p => {
-      const label = document.createElement('label');
-      label.className = 'check-item' + (grp === 'wild' ? ' wildcard' : '');
-      const cb = document.createElement('input');
-      cb.type = 'checkbox';
-      cb.id = 'opt-' + p.id;
-      cb.checked = true;
-      label.appendChild(cb);
-      // Keep the verb only (Amplify, Consume, Convert 1, Convert 2, etc.) — strip module name in parens
-      const shortLabel = p.label.replace(/\s*\([^)]*\)\s*$/, '');
-      label.appendChild(document.createTextNode(shortLabel));
-      container.appendChild(label);
-    });
-  });
-}
-buildChecks();
-
-function checkAll(val) {
-  document.querySelectorAll('[id^="opt-"]').forEach(cb => cb.checked = val);
-}
-
-function getUnlocked() {
-  return PASSIVE_LIST.filter(p => {
-    if (p.id === 'none') return false;
-    const cb = document.getElementById('opt-' + p.id);
-    return cb && cb.checked;
-  });
-}
-
-function simState(p1, p2, p3, base) {
-  const s = {
-    off: base, def: base, util: base,
-    pot_off: 1, pot_def: 1, pot_util: 1,
-    lock_off: false, lock_def: false, lock_util: false,
-    sat_off: false, sat_def: false, sat_util: false,
-    conv_off: [], conv_def: [], conv_util: [],
-    _base: base,
-  };
-  [p1, p2, p3].forEach(p => { if (p && p.apply) p.apply(s); });
-  s.off = Math.max(0, s.off);
-  s.def = Math.max(0, s.def);
-  s.util = Math.max(0, s.util);
+function runPassives(s, list) {
+  list.forEach(p => { if(p && p.apply) p.apply(s); });
+  s.off=Math.max(0,s.off); s.def=Math.max(0,s.def); s.util=Math.max(0,s.util);
   return s;
 }
 
-function score(s, goal) {
-  // Sum all active stat contributions per module (default + all converts)
-  const sumRate = (convArr, defaultStat, stacks, pot) => {
-    if (stacks === 0) return 0;
-    const stats = convArr.length ? convArr : [defaultStat];
-    return stats.reduce((acc, sk) => acc + stacks * pot * STAT_DEFS[sk][1], 0);
-  };
-  const eo = s.sat_off  ? 0 : sumRate(s.conv_off,  'weapon_handling', s.off,  s.pot_off);
-  const ed = s.sat_def  ? 0 : sumRate(s.conv_def,  'max_armor',       s.def,  s.pot_def);
-  const eu = s.sat_util ? 0 : sumRate(s.conv_util, 'skill_damage',    s.util, s.pot_util);
-  if (goal === 'off')  return s.sat_off  ? -9999 : eo;
-  if (goal === 'def')  return s.sat_def  ? -9999 : ed;
-  if (goal === 'util') return s.sat_util ? -9999 : eu;
-  return eo + ed + eu;
+function activeStats(convArr, defaultStat) {
+  return convArr.length ? convArr : [defaultStat];
 }
 
-function runOptimizer() {
-  const btn = document.getElementById('run-btn');
-  btn.disabled = true;
-  btn.textContent = '⏳ Computing...';
+function fmtResult(val, pot, sat, conv, def) {
+  if(sat) return {attr:'⛔ stat disabled', pct:'—', rate:''};
+  const stats = activeStats(conv, def);
+  return {
+    attr: stats.map(sk=>STAT_DEFS[sk][0]).join(' + '),
+    pct:  stats.map(sk=>`+${(val*pot*STAT_DEFS[sk][1]).toFixed(1)}%`).join(' / '),
+    rate: stats.map(sk=>`${STAT_DEFS[sk][1]}%/stack`).join(' · ') + (pot>1?` · ×${pot.toFixed(1)} potency`:''),
+  };
+}
 
-  setTimeout(() => {
-    const totalBonus = lvBonus('lv-blackout') + lvBonus('lv-cloud') + lvBonus('lv-optimize');
-    const base = 8 + totalBonus;
-    const minOff  = parseInt(document.getElementById('min-off').value)  || 0;
-    const minDef  = parseInt(document.getElementById('min-def').value)  || 0;
-    const minUtil = parseInt(document.getElementById('min-util').value) || 0;
-    const noSat   = document.getElementById('no-saturate').checked;
-    const noConv  = document.getElementById('no-converge').checked;
+function stateSig(s) {
+  return `${s.off}|${s.def}|${s.util}|${s.pot_off.toFixed(2)}|${s.pot_def.toFixed(2)}|${s.pot_util.toFixed(2)}|${+s.sat_off}${+s.sat_def}${+s.sat_util}|${s.conv_off}|${s.conv_def}|${s.conv_util}`;
+}
 
-    // Read required attributes from checkboxes — empty set = no constraint
-    const REQ_ATTR_MAP = {
-      off:  ['weapon_handling','headshot','magsize'],
-      def:  ['max_armor','elites','hazard'],
-      util: ['skill_damage','skillrepair','statuseffects'],
-    };
-    const ATTR_TO_CONV_ID = {
-      weapon_handling: null, headshot:'conv1_off', magsize:'conv2_off',
-      max_armor: null, elites:'conv1_def', hazard:'conv2_def',
-      skill_damage: null, skillrepair:'conv1_util', statuseffects:'conv2_util',
-    };
+// ================================================================
+// UTILS
+// ================================================================
+function getBase() { return 8+Math.max(0,parseInt(document.getElementById('lv-blackout').value)-1)+Math.max(0,parseInt(document.getElementById('lv-cloud').value)-1)+Math.max(0,parseInt(document.getElementById('lv-optimize').value)-1); }
 
-    // For each module, collect which attributes are required
-    const reqAttrs = { off:[], def:[], util:[] };
-    Object.entries(REQ_ATTR_MAP).forEach(([mod, attrs]) => {
-      attrs.forEach(attr => {
-        if (document.getElementById(`req-${mod}-${attr}`).checked) {
-          reqAttrs[mod].push(attr);
-        }
-      });
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// ================================================================
+// URL HASH
+// ================================================================
+function buildHash() {
+  const sels=Array.from(document.querySelectorAll('.psel'));
+  return '#lv='+['lv-blackout','lv-cloud','lv-optimize'].map(id=>document.getElementById(id).value).join(',')
+    +'&eq='+document.getElementById('equipped').value
+    +'&p='+sels.map(s=>s.value).join(',');
+}
+
+function loadHash() {
+  const h=window.location.hash;
+  if(!h||h.length<5) return;
+  try {
+    const p={};
+    h.slice(1).split('&').forEach(x=>{const[k,v]=x.split('=');p[k]=v;});
+    if(p.lv){const a=p.lv.split(',');['lv-blackout','lv-cloud','lv-optimize'].forEach((id,i)=>{if(a[i]!==undefined)document.getElementById(id).value=a[i];});}
+    if(p.eq) document.getElementById('equipped').value=p.eq;
+    if(p.p){const a=p.p.split(',');document.querySelectorAll('.psel').forEach((s,i)=>{if(a[i]!==undefined)s.value=a[i];});}
+  } catch(e){}
+}
+
+function safeReplaceState(hash) {
+  try { history.replaceState(null,'',hash); } catch(e){}
+}
+
+function copyLink() {
+  const url=window.location.href.split('#')[0]+buildHash();
+  navigator.clipboard.writeText(url).then(()=>showToast('Link copied!'),()=>{safeReplaceState(buildHash());showToast('Link updated in address bar!');});
+}
+
+function resetAll() {
+  ['lv-blackout','lv-cloud','lv-optimize'].forEach(id=>document.getElementById(id).value='0');
+  document.getElementById('equipped').value='none';
+  document.querySelectorAll('.psel').forEach(s=>s.value='none');
+  safeReplaceState(window.location.pathname);
+  buildHistory.length=0;
+  renderHistory();
+  update();
+  showToast('Reset done.');
+}
+
+// ================================================================
+// BUILD HISTORY
+// ================================================================
+const buildHistory=[];
+
+function pushHistory(ids, s, fromHistory=false) {
+  if(ids.every(id=>id==='none')) return;
+  const key=ids.join('|');
+  // Never push if this exact build is already anywhere in history
+  if(buildHistory.some(h=>h.key===key)) return;
+  buildHistory.unshift({key,ids,off:s.off,def:s.def,util:s.util});
+  if(buildHistory.length>5) buildHistory.pop();
+  renderHistory();
+}
+
+function renderHistory() {
+  const el=document.getElementById('history-list');
+  if(!buildHistory.length){el.innerHTML='<div class="history-empty">No history yet — select passives to start tracking.</div>';return;}
+  el.innerHTML=buildHistory.map((h,i)=>{
+    const names=h.ids.map(id=>{const p=PASSIVE_LIST.find(x=>x.id===id);return p&&p.id!=='none'?p.label.replace(/ \(.*?\)/,''):null;}).filter(Boolean).join(' · ');
+    return `<div class="history-item" onclick="loadHistory(${i})">
+      <div class="history-passives">${names||'—'}</div>
+      <div class="history-stacks"><span class="off">OFF ${h.off}</span><span class="def">DEF ${h.def}</span><span class="util">UTIL ${h.util}</span></div>
+    </div>`;
+  }).join('');
+}
+
+function loadHistory(i) {
+  const h=buildHistory[i];
+  document.querySelectorAll('.psel').forEach((sel,i)=>{ sel.value=h.ids[i]; });
+  update();
+}
+
+// ================================================================
+// DUPLICATE BLOCKING
+// ================================================================
+function refreshDups() {
+  const sels=Array.from(document.querySelectorAll('.psel'));
+  sels.forEach((sel,i)=>{
+    const used=sels.slice(0,i).map(s=>s.value).filter(v=>v!=='none');
+    Array.from(sel.options).forEach(opt=>{opt.disabled=opt.value!=='none'&&used.includes(opt.value);});
+  });
+}
+
+// ================================================================
+// CALCULATOR UPDATE
+// ================================================================
+function update() {
+  refreshDups();
+  const base=getBase();
+  document.getElementById('base-display').innerHTML=`${base} / ${base} / ${base}<span>BASE STACKS (8 + ${base-8})</span>`;
+  ['off','def','util'].forEach(m=>document.getElementById(`base-bracket-${m}`).textContent=`[${base}]`);
+  document.getElementById('equipped-note').innerHTML=EQUIPPED_NOTES[document.getElementById('equipped').value]||'';
+
+  const s=makeState(base);
+  const flags={cascade:false,converge:false,equalize:false,nullify:false};
+
+  document.querySelectorAll('.psel').forEach((sel,i)=>{
+    const p=PASSIVE_LIST.find(x=>x.id===sel.value);
+    const descEl=document.querySelector(`.passive-desc[data-slot="${i}"]`);
+    if(!p||p.id==='none'){descEl.textContent='';return;}
+    descEl.textContent=`› ${p.desc}`;
+    if(p.id in flags) flags[p.id]=true;
+    if(p.apply) p.apply(s);
+  });
+  s.off=Math.max(0,s.off); s.def=Math.max(0,s.def); s.util=Math.max(0,s.util);
+
+  [{m:'off',conv:s.conv_off,sat:s.sat_off,lock:s.lock_off,pot:s.pot_off,val:s.off,def:MOD_DEFAULT.off},
+   {m:'def',conv:s.conv_def,sat:s.sat_def,lock:s.lock_def,pot:s.pot_def,val:s.def,def:MOD_DEFAULT.def},
+   {m:'util',conv:s.conv_util,sat:s.sat_util,lock:s.lock_util,pot:s.pot_util,val:s.util,def:MOD_DEFAULT.util}
+  ].forEach(({m,conv,sat,lock,pot,val,def})=>{
+    document.getElementById(`res-${m}`).textContent=val;
+    document.getElementById(`pot-${m}`).textContent=pot>1?`potency ×${pot.toFixed(1)}`:'';
+    const r=fmtResult(val,pot,sat,conv,def);
+    document.getElementById(`attr-${m}-res`).textContent=r.attr;
+    document.getElementById(`pct-${m}`).textContent=r.pct;
+    document.getElementById(`rate-${m}`).textContent=r.rate;
+    document.getElementById(`lock-${m}`).classList.toggle('visible',lock);
+    document.getElementById(`card-${m}`).classList.toggle('mod-card-disabled',sat);
+    document.getElementById(`card-${m}`).classList.toggle('active-glow',!sat&&val>base);
+  });
+
+  const tot=(s.off+s.def+s.util)||1;
+  [['off','OFF'],['def','DEF'],['util','UTIL']].forEach(([m,lbl])=>{
+    const v=s[m], pct=Math.round(v/tot*100);
+    document.getElementById(`bar-${m}`).style.width=pct+'%';
+    document.getElementById(`lbl-${m}`).textContent=`${lbl} ${v}`;
+    document.getElementById(`barpct-${m}`).textContent=pct+'%';
+  });
+
+  Object.keys(flags).forEach(k=>document.getElementById(`notice-${k}`).style.display=flags[k]?'block':'none');
+
+  const ids=Array.from(document.querySelectorAll('.psel')).map(s=>s.value);
+  pushHistory(ids,s);
+  safeReplaceState(buildHash());
+}
+
+// Populate passive selects
+document.querySelectorAll('.psel').forEach(sel=>{
+  PASSIVE_LIST.forEach(p=>{
+    const o=document.createElement('option');
+    o.value=p.id;
+    o.textContent=p.desc?`${p.label}  —  ${p.desc}`:p.label;
+    sel.appendChild(o);
+  });
+  sel.addEventListener('change',update);
+});
+['lv-blackout','lv-cloud','lv-optimize','equipped'].forEach(id=>document.getElementById(id).addEventListener('change',update));
+
+// ================================================================
+// TABS
+// ================================================================
+function switchTab(name,btn) {
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(btn) btn.classList.add('active');
+}
+
+// ================================================================
+// OPTIMIZER
+// ================================================================
+let currentGoal='off';
+
+function setGoal(g) {
+  currentGoal=g;
+  ['off','def','util','bal'].forEach(x=>document.getElementById('goal-'+x).className='goal-btn'+(x===g?` active-${x}`:''));
+}
+
+// Build optimizer checkboxes with tooltips
+const PASSIVE_GROUPS={
+  off:  PASSIVE_LIST.filter(p=>p.id!=='none'&&p.id.endsWith('_off')),
+  def:  PASSIVE_LIST.filter(p=>p.id!=='none'&&p.id.endsWith('_def')),
+  util: PASSIVE_LIST.filter(p=>p.id!=='none'&&p.id.endsWith('_util')),
+  wild: PASSIVE_LIST.filter(p=>['cascade','converge','equalize','nullify'].includes(p.id)),
+};
+
+(function buildChecks(){
+  Object.entries(PASSIVE_GROUPS).forEach(([grp,list])=>{
+    const container=document.getElementById('checks-'+grp);
+    list.forEach(p=>{
+      const lbl=document.createElement('label');
+      lbl.className='check-item'+(grp==='wild'?' wildcard':'');
+      const cb=document.createElement('input'); cb.type='checkbox'; cb.id='opt-'+p.id; cb.checked=true;
+      const text=document.createTextNode(p.label.replace(/\s*\([^)]*\)\s*$/,''));
+      const tip=document.createElement('span'); tip.className='tip'; tip.textContent=p.desc;
+      lbl.appendChild(cb); lbl.appendChild(text); lbl.appendChild(tip);
+      container.appendChild(lbl);
+    });
+  });
+})();
+
+function checkAll(val){ document.querySelectorAll('[id^="opt-"]').forEach(cb=>cb.checked=val); }
+
+function getUnlocked(){
+  return PASSIVE_LIST.filter(p=>{
+    if(p.id==='none') return false;
+    const cb=document.getElementById('opt-'+p.id);
+    return cb&&cb.checked;
+  });
+}
+
+function scoreState(s,goal){
+  const sumR=(conv,def,val,pot)=>val===0?0:activeStats(conv,def).reduce((a,sk)=>a+val*pot*STAT_DEFS[sk][1],0);
+  const eo=s.sat_off?0:sumR(s.conv_off,MOD_DEFAULT.off,s.off,s.pot_off);
+  const ed=s.sat_def?0:sumR(s.conv_def,MOD_DEFAULT.def,s.def,s.pot_def);
+  const eu=s.sat_util?0:sumR(s.conv_util,MOD_DEFAULT.util,s.util,s.pot_util);
+  if(goal==='off') return s.sat_off?-9999:eo;
+  if(goal==='def') return s.sat_def?-9999:ed;
+  if(goal==='util') return s.sat_util?-9999:eu;
+  return eo+ed+eu;
+}
+
+function runOptimizer(){
+  const btn=document.getElementById('run-btn');
+  btn.disabled=true; btn.textContent='⏳ Computing...';
+  document.getElementById('opt-stats').textContent='';
+
+  setTimeout(()=>{
+    const base=getBase();
+    const minOff=parseInt(document.getElementById('min-off').value)||0;
+    const minDef=parseInt(document.getElementById('min-def').value)||0;
+    const minUtil=parseInt(document.getElementById('min-util').value)||0;
+    const noSat=document.getElementById('no-saturate').checked;
+    const noConv=document.getElementById('no-converge').checked;
+    const noStab=document.getElementById('no-stabilize').checked;
+
+    // Required / forbidden attribute logic
+    const REQ_MAP={off:['weapon_handling','headshot','magsize'],def:['max_armor','elites','hazard'],util:['skill_damage','skillrepair','statuseffects']};
+    const ATTR_CONV={weapon_handling:null,headshot:'conv1_off',magsize:'conv2_off',max_armor:null,elites:'conv1_def',hazard:'conv2_def',skill_damage:null,skillrepair:'conv1_util',statuseffects:'conv2_util'};
+    const CONV_MAP={off:{weapon_handling:null,headshot:'conv1_off',magsize:'conv2_off'},def:{max_armor:null,elites:'conv1_def',hazard:'conv2_def'},util:{skill_damage:null,skillrepair:'conv1_util',statuseffects:'conv2_util'}};
+
+    const reqAttrs={off:[],def:[],util:[]};
+    Object.entries(REQ_MAP).forEach(([mod,attrs])=>attrs.forEach(a=>{if(document.getElementById(`req-${mod}-${a}`).checked)reqAttrs[mod].push(a);}));
+
+    const required=new Set(), forbidden=new Set();
+    Object.entries(reqAttrs).forEach(([mod,attrs])=>{
+      if(!attrs.length) return;
+      attrs.forEach(a=>{const id=ATTR_CONV[a];if(id)required.add(id);});
+      Object.entries(CONV_MAP[mod]).forEach(([a,id])=>{if(id&&!attrs.includes(a))forbidden.add(id);});
     });
 
-    // Build required passive IDs (converts needed) and forbidden passive IDs
-    const requiredPassives = new Set();
-    const forbiddenPassives = new Set();
+    const pool=getUnlocked();
+    const results=[];
+    const seenKey=new Set(), seenSig=new Set();
+    let tested=0, valid=0;
 
-    Object.entries(reqAttrs).forEach(([mod, attrs]) => {
-      if (attrs.length === 0) return; // no constraint
-      // Each required attr that needs a convert must appear in the combo
-      attrs.forEach(attr => {
-        const convId = ATTR_TO_CONV_ID[attr];
-        if (convId) requiredPassives.add(convId);
-      });
+    for(let i=0;i<pool.length;i++){
+      for(let j=0;j<pool.length;j++){
+        if(j===i) continue;
+        for(let k=0;k<pool.length;k++){
+          if(k===i||k===j) continue;
+          tested++;
+          const p1=pool[i],p2=pool[j],p3=pool[k];
+          const combo=[p1.id,p2.id,p3.id];
+          const okey=combo.join('|');
+          if(seenKey.has(okey)) continue;
+          seenKey.add(okey);
+          if([...required].some(r=>!combo.includes(r))) continue;
+          if(combo.some(id=>forbidden.has(id))) continue;
 
-      const defaultAttrs = { off:'weapon_handling', def:'max_armor', util:'skill_damage' };
-      const convMap = {
-        off:  { weapon_handling: null, headshot:'conv1_off', magsize:'conv2_off' },
-        def:  { max_armor: null, elites:'conv1_def', hazard:'conv2_def' },
-        util: { skill_damage: null, skillrepair:'conv1_util', statuseffects:'conv2_util' },
-      };
+          const s=runPassives(makeState(base),[p1,p2,p3]);
+          if(noSat&&(s.sat_off||s.sat_def||s.sat_util)) continue;
+          if(noConv&&((s.off===0&&s.def===0)||(s.off===0&&s.util===0)||(s.def===0&&s.util===0))) continue;
+          if(noStab&&(s.lock_off||s.lock_def||s.lock_util)) continue;
+          if(s.off<minOff||s.def<minDef||s.util<minUtil) continue;
 
-      // Forbid any convert of this module that is NOT in the required list
-      Object.entries(convMap[mod]).forEach(([attr, convId]) => {
-        if (!convId) return; // default attr has no convert to forbid
-        if (!attrs.includes(attr)) {
-          forbiddenPassives.add(convId);
-        }
-      });
-    });
+          const sig=stateSig(s);
+          if(seenSig.has(sig)) continue;
+          seenSig.add(sig);
 
-    const pool = getUnlocked();
-    const top = [];
-    const seen = new Set();
-
-    for (let i = 0; i < pool.length; i++) {
-      for (let j = 0; j < pool.length; j++) {
-        if (j === i) continue;
-        for (let k = 0; k < pool.length; k++) {
-          if (k === i || k === j) continue;
-          const p1 = pool[i], p2 = pool[j], p3 = pool[k];
-          const combo = [p1.id, p2.id, p3.id];
-
-          // Enforce required passives
-          if ([...requiredPassives].some(req => !combo.includes(req))) continue;
-          // Enforce forbidden passives
-          if (combo.some(id => forbiddenPassives.has(id))) continue;
-
-          const s = simState(p1, p2, p3, base);
-
-          if (noSat && (s.sat_off || s.sat_def || s.sat_util)) continue;
-          if (noConv && ((s.off === 0 && s.def === 0) || (s.off === 0 && s.util === 0) || (s.def === 0 && s.util === 0))) continue;
-          if (s.off < minOff || s.def < minDef || s.util < minUtil) continue;
-
-          const sc = score(s, currentGoal);
-          const key = combo.join('|');
-          if (seen.has(key)) continue;
-          seen.add(key);
-
-          top.push({ p1, p2, p3, s, sc });
+          valid++;
+          const sc = scoreState(s, currentGoal);
+          // Secondary score: sum of the two non-goal modules (tiebreaker — more secondary stats = better)
+          const allGoals = ['off','def','util'];
+          const sc2 = allGoals.filter(g => g !== currentGoal && currentGoal !== 'bal')
+                              .reduce((sum, g) => sum + scoreState(s, g), 0);
+          results.push({p1,p2,p3,s,sc,sc2});
         }
       }
     }
 
-    top.sort((a, b) => b.sc - a.sc);
-    const best = top.slice(0, 5);
+    // Sort: primary = goal score, secondary = sum of other modules (penalises builds that zero them out)
+    results.sort((a,b)=> b.sc!==a.sc ? b.sc-a.sc : b.sc2-a.sc2);
+    const best=results.slice(0,5);
+    document.getElementById('opt-stats').textContent=`${tested.toLocaleString()} combinations tested · ${valid.toLocaleString()} unique valid builds found`;
 
-    const container = document.getElementById('opt-results');
-    if (best.length === 0) {
-      container.innerHTML = '<div class="opt-empty">No build found matching your constraints. Try relaxing the minimum thresholds, required attributes, or unlocking more passives.</div>';
+    const container=document.getElementById('opt-results');
+    if(!best.length){
+      container.innerHTML='<div class="opt-empty">No build found. Try relaxing thresholds, required attributes, or unlocking more passives.</div>';
     } else {
-      container.innerHTML = '<div class="opt-results-title">Top results — click "Load" to apply in the calculator</div>';
-      best.forEach((r, idx) => {
-        const lastOff  = r.s.conv_off.length  ? r.s.conv_off[r.s.conv_off.length-1]   : 'weapon_handling';
-        const lastDef  = r.s.conv_def.length  ? r.s.conv_def[r.s.conv_def.length-1]   : 'max_armor';
-        const lastUtil = r.s.conv_util.length ? r.s.conv_util[r.s.conv_util.length-1] : 'skill_damage';
-        const allOff  = r.s.conv_off.length  ? r.s.conv_off  : ['weapon_handling'];
-        const allDef  = r.s.conv_def.length  ? r.s.conv_def  : ['max_armor'];
-        const allUtil = r.s.conv_util.length ? r.s.conv_util : ['skill_damage'];
-        const fmtStats = (arr, val, pot, sat) => sat ? '—' : arr.map(sk => `+${(val * STAT_DEFS[sk][1] * pot).toFixed(1)}% ${STAT_DEFS[sk][0]}`).join(' · ');
-        const pctOff  = fmtStats(allOff,  r.s.off,  r.s.pot_off,  r.s.sat_off);
-        const pctDef  = fmtStats(allDef,  r.s.def,  r.s.pot_def,  r.s.sat_def);
-        const pctUtil = fmtStats(allUtil, r.s.util, r.s.pot_util, r.s.sat_util);
-
-        const card = document.createElement('div');
-        card.className = 'result-card';
-        card.innerHTML = `
-          <div class="result-rank">${idx === 0 ? '★ BEST BUILD' : `#${idx + 1}`}</div>
-          <div class="result-passives">
-            <span>1.</span> ${r.p1.label}<br>
-            <span>2.</span> ${r.p2.label}<br>
-            <span>3.</span> ${r.p3.label}
-          </div>
+      container.innerHTML='<div class="opt-results-title">Top results — click "Load" to apply in the Calculator</div>';
+      best.forEach((r,idx)=>{
+        const allOff=r.s.conv_off.length?r.s.conv_off:[MOD_DEFAULT.off];
+        const allDef=r.s.conv_def.length?r.s.conv_def:[MOD_DEFAULT.def];
+        const allUtil=r.s.conv_util.length?r.s.conv_util:[MOD_DEFAULT.util];
+        const fmt=(arr,val,pot,sat)=>sat?'—':arr.map(sk=>`+${(val*pot*STAT_DEFS[sk][1]).toFixed(1)}% ${STAT_DEFS[sk][0]}`).join(' · ');
+        const pO=fmt(allOff,r.s.off,r.s.pot_off,r.s.sat_off);
+        const pD=fmt(allDef,r.s.def,r.s.pot_def,r.s.sat_def);
+        const pU=fmt(allUtil,r.s.util,r.s.pot_util,r.s.sat_util);
+        const goalLabel={off:'Offense',def:'Defense',util:'Utility',bal:'Balanced'}[currentGoal];
+        const card=document.createElement('div');
+        card.className='result-card'+(idx===0?' best':'');
+        card.innerHTML=`
+          <div class="result-rank">${idx===0?'★ BEST BUILD':'#'+(idx+1)}</div>
+          <div class="result-passives"><span>1.</span> ${r.p1.label}<br><span>2.</span> ${r.p2.label}<br><span>3.</span> ${r.p3.label}</div>
+          <div class="result-summary">${goalLabel} score: ${r.sc.toFixed(1)}</div>
           <div class="result-stacks">
-            <div class="result-stack off ${r.s.sat_off ? 'disabled' : ''}">OFF ${r.s.off} · ${pctOff}</div>
-            <div class="result-stack def ${r.s.sat_def ? 'disabled' : ''}">DEF ${r.s.def} · ${pctDef}</div>
-            <div class="result-stack util ${r.s.sat_util ? 'disabled' : ''}">UTIL ${r.s.util} · ${pctUtil}</div>
+            <div class="result-stack off ${r.s.sat_off?'disabled':''}">OFF ${r.s.off} · ${pO}</div>
+            <div class="result-stack def ${r.s.sat_def?'disabled':''}">DEF ${r.s.def} · ${pD}</div>
+            <div class="result-stack util ${r.s.sat_util?'disabled':''}">UTIL ${r.s.util} · ${pU}</div>
           </div>
-          <button class="load-btn" onclick="loadBuild('${r.p1.id}','${r.p2.id}','${r.p3.id}')">Load in Calculator →</button>
-        `;
+          <button class="load-btn" onclick="loadBuild('${r.p1.id}','${r.p2.id}','${r.p3.id}')">Load in Calculator →</button>`;
         container.appendChild(card);
       });
     }
-
-    btn.disabled = false;
-    btn.textContent = '▶ Find Best Build';
-  }, 50);
+    btn.disabled=false; btn.textContent='▶ Find Best Build';
+  },50);
 }
 
-function loadBuild(id1, id2, id3) {
-  const sels = document.querySelectorAll('.psel');
-  [id1, id2, id3].forEach((id, i) => { sels[i].value = id; });
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+function loadBuild(id1,id2,id3){
+  document.querySelectorAll('.psel').forEach((s,i)=>s.value=[id1,id2,id3][i]);
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('tab-calculator').classList.add('active');
-  document.querySelectorAll('.tab-btn')[0].classList.add('active');
+  document.getElementById('tab-btn-calculator').classList.add('active');
   update();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({top:0,behavior:'smooth'});
 }
+
+// ================================================================
+// INIT
+// ================================================================
+loadHash();
+update();
 </script>
 </body>
 </html>
