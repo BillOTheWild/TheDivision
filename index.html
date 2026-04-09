@@ -40,6 +40,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-ui);font-size
 .icon-btn{font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:none;border:1px solid var(--border2);color:var(--text-dim);padding:5px 12px;cursor:pointer;transition:all .15s;}
 .icon-btn.copy{border-color:var(--def-dim);color:var(--def);}
 .icon-btn.copy:hover{border-color:var(--def);background:rgba(74,158,221,.08);}
+.icon-btn.capture{border-color:var(--util-dim);color:var(--util);}
+.icon-btn.capture:hover{border-color:var(--util);background:rgba(240,165,0,.08);}
+.icon-btn.capture:disabled{opacity:.4;cursor:not-allowed;}
 .icon-btn.reset{border-color:var(--off-dim);color:var(--off);}
 .icon-btn.reset:hover{border-color:var(--off);background:rgba(232,64,64,.08);}
 
@@ -47,7 +50,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-ui);font-size
 .active-cell{display:flex;flex-direction:column;gap:6px;}
 .active-cell-name{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-family:var(--font-mono);}
 .equipped-row{padding-top:12px;border-top:1px solid var(--border);}
-.equipped-note{font-family:var(--font-mono);font-size:11px;color:var(--text-dim);margin-top:6px;min-height:14px;line-height:1.5;}
+.equipped-note{font-family:var(--font-mono);font-size:11px;color:var(--text-dim);margin-top:6px;line-height:1.5;}
 .equipped-note em{color:var(--accent);font-style:normal;}
 
 .section{margin-bottom:24px;}
@@ -90,34 +93,44 @@ select option{background:#1a1a1a;}
 .module-card.utility{border-top:2px solid var(--util);}
 .module-card.utility::after{background:var(--util-glow);}
 .module-card.active-glow::after{opacity:1;}
-.mod-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+/* Compact card header: module name + stacks on one line */
+.mod-header{display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;margin-bottom:8px;border-bottom:1px solid var(--border);}
 .mod-name{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;font-family:var(--font-mono);}
 .offense .mod-name{color:var(--off);}
 .defense .mod-name{color:var(--def);}
 .utility .mod-name{color:var(--util);}
-.mod-lock{font-family:var(--font-mono);font-size:10px;padding:1px 6px;border:1px solid;display:none;}
-.offense .mod-lock{border-color:var(--off-dim);color:var(--off);}
-.defense .mod-lock{border-color:var(--def-dim);color:var(--def);}
-.utility .mod-lock{border-color:var(--util-dim);color:var(--util);}
-.mod-lock.visible{display:block;}
-.mod-stacks{display:flex;align-items:baseline;gap:6px;margin-bottom:4px;}
-.mod-value{font-size:52px;font-weight:700;line-height:1;font-family:var(--font-mono);}
+.mod-header-right{display:flex;align-items:baseline;gap:6px;}
+.mod-value{font-size:22px;font-weight:700;line-height:1;font-family:var(--font-mono);}
 .offense .mod-value{color:var(--off);}
 .defense .mod-value{color:var(--def);}
 .utility .mod-value{color:var(--util);}
 .mod-card-disabled .mod-value{color:var(--text-muted)!important;text-decoration:line-through;}
-.mod-base{font-family:var(--font-mono);font-size:13px;color:var(--text-muted);}
-.mod-potency{font-family:var(--font-mono);font-size:11px;margin-bottom:8px;min-height:14px;}
-.offense .mod-potency{color:var(--off);}
-.defense .mod-potency{color:var(--def);}
-.utility .mod-potency{color:var(--util);}
-.mod-stat{font-size:13px;font-weight:600;letter-spacing:.04em;color:var(--text);min-height:18px;}
-.mod-stat-pct{font-family:var(--font-mono);font-size:18px;font-weight:700;margin-top:4px;}
+.mod-base{font-family:var(--font-mono);font-size:11px;color:var(--text-muted);}
+.mod-potency-inline{font-family:var(--font-mono);font-size:10px;padding:1px 5px;border:1px solid;display:none;}
+.offense .mod-potency-inline{border-color:var(--off-dim);color:var(--off);}
+.defense .mod-potency-inline{border-color:var(--def-dim);color:var(--def);}
+.utility .mod-potency-inline{border-color:var(--util-dim);color:var(--util);}
+.mod-potency-inline.visible{display:inline-block;}
+.mod-lock{font-family:var(--font-mono);font-size:10px;padding:1px 6px;border:1px solid;display:none;}
+.offense .mod-lock{border-color:var(--off-dim);color:var(--off);}
+.defense .mod-lock{border-color:var(--def-dim);color:var(--def);}
+.utility .mod-lock{border-color:var(--util-dim);color:var(--util);}
+.mod-lock.visible{display:inline-block;}
+/* Stat rows */
+.mod-stat-row{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:3px;}
+.mod-stat-row:last-child{margin-bottom:0;}
+.mod-stat-name{font-size:12px;font-weight:600;color:var(--text);flex:1;}
+.mod-stat-pct{font-family:var(--font-mono);font-size:13px;font-weight:700;flex-shrink:0;}
 .offense .mod-stat-pct{color:var(--off);}
 .defense .mod-stat-pct{color:var(--def);}
 .utility .mod-stat-pct{color:var(--util);}
-.mod-card-disabled .mod-stat,.mod-card-disabled .mod-stat-pct{color:var(--text-muted)!important;}
-.mod-rate{font-family:var(--font-mono);font-size:10px;color:var(--text-muted);margin-top:2px;}
+.mod-stat-rate{font-family:var(--font-mono);font-size:10px;color:var(--text-muted);flex-shrink:0;}
+.mod-card-disabled .mod-stat-name,.mod-card-disabled .mod-stat-pct{color:var(--text-muted)!important;}
+.mod-disabled-label{font-family:var(--font-mono);font-size:11px;color:var(--text-muted);}
+/* Remove old unused rules */
+.mod-potency{display:none;}
+.mod-stat{display:none;}
+.mod-rate{display:none;}
 
 .bars{display:flex;flex-direction:column;gap:8px;}
 .bar-row{display:flex;align-items:center;gap:10px;}
@@ -200,6 +213,28 @@ input[type=number]:focus{border-color:var(--accent);box-shadow:0 0 0 1px var(--a
 .opt-empty{font-family:var(--font-mono);font-size:12px;color:var(--text-muted);text-align:center;padding:24px;border:1px dashed var(--border2);}
 .separator{border:none;border-top:1px solid var(--border);margin:16px 0;}
 
+.result-passives-summary{margin-bottom:12px;display:flex;flex-direction:column;gap:0;}
+.result-passive-row{display:flex;align-items:baseline;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-family:var(--font-mono);font-size:12px;}
+.result-passive-row:last-child{border-bottom:none;}
+.result-passive-slot{color:var(--text-muted);width:14px;flex-shrink:0;}
+.result-passive-name{color:var(--accent);flex-shrink:0;}
+.result-passive-desc{color:var(--text-dim);font-size:11px;}
+.result-passive-empty{font-family:var(--font-mono);font-size:11px;color:var(--text-muted);padding:6px 0;}
+.result-bottom{display:flex;gap:12px;align-items:center;margin-top:12px;}
+.result-bottom #active-effect-inline{flex-shrink:0;}
+.result-bottom .active-effect-card{width:220px;}
+.result-bottom .bars{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;}
+@media(max-width:600px){.result-bottom{flex-direction:column;}.result-bottom .active-effect-card{width:100%;}}
+.active-effect-card{background:var(--bg3);border:1px solid var(--border2);padding:8px 10px;}
+.active-effect-name{font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+.active-effect-row{display:flex;justify-content:space-between;align-items:baseline;padding:2px 0;border-bottom:1px solid var(--border);font-family:var(--font-mono);font-size:11px;}
+.active-effect-row:last-child{border-bottom:none;}
+.active-effect-label{color:var(--text-dim);}
+.active-effect-value{font-weight:600;color:var(--text);}
+.active-effect-value.off{color:var(--off);}
+.active-effect-value.def{color:var(--def);}
+.active-effect-value.util{color:var(--util);}
+.active-effect-lv5{font-family:var(--font-mono);font-size:10px;color:var(--util);margin-top:6px;padding-top:4px;border-top:1px dashed var(--util-dim);}
 .toast{position:fixed;bottom:24px;right:24px;background:var(--bg3);border:1px solid var(--accent);color:var(--accent);font-family:var(--font-mono);font-size:12px;padding:10px 16px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:100;}
 .toast.show{opacity:1;}
 
@@ -214,6 +249,7 @@ input[type=number]:focus{border-color:var(--accent);box-shadow:0 0 0 1px var(--a
   .mod-value{font-size:40px;}
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 <div class="app">
@@ -235,6 +271,7 @@ input[type=number]:focus{border-color:var(--accent);box-shadow:0 0 0 1px var(--a
     <div class="global-title">Active Modifier Levels — cumulative · used by both tabs</div>
     <div class="global-actions">
       <button class="icon-btn copy" onclick="copyLink()">⎘ Copy Link</button>
+      <button class="icon-btn capture" onclick="captureResult()">📷 Save Image</button>
       <button class="icon-btn reset" onclick="resetAll()">↺ Reset</button>
     </div>
   </div>
@@ -319,38 +356,56 @@ input[type=number]:focus{border-color:var(--accent);box-shadow:0 0 0 1px var(--a
     </div>
   </div>
 
-  <div class="section">
+  <div class="section" id="result-capture-zone">
     <div class="section-label">Result — final stacks</div>
-    <div class="results-grid">
+    <div class="panel">
+      <div class="result-passives-summary" id="result-passives-summary"></div>
+    </div>
+    <div class="results-grid" style="margin-top:10px;">
       <div class="module-card offense" id="card-off">
-        <div class="mod-header"><div class="mod-name">Offense</div><div class="mod-lock" id="lock-off">LOCKED</div></div>
-        <div class="mod-stacks"><div class="mod-value" id="res-off">8</div><div class="mod-base" id="base-bracket-off">[8]</div></div>
-        <div class="mod-potency" id="pot-off"></div>
-        <div class="mod-stat" id="attr-off-res">Weapon Handling</div>
-        <div class="mod-stat-pct" id="pct-off">+8%</div>
-        <div class="mod-rate" id="rate-off">1% per stack</div>
+        <div class="mod-header">
+          <div class="mod-name">Offense</div>
+          <div class="mod-header-right">
+            <div class="mod-value" id="res-off">8</div>
+            <div class="mod-base" id="base-bracket-off">[8]</div>
+            <span class="mod-potency-inline" id="pot-off"></span>
+            <span class="mod-lock" id="lock-off">LOCKED</span>
+          </div>
+        </div>
+        <div id="stats-off"></div>
       </div>
       <div class="module-card defense" id="card-def">
-        <div class="mod-header"><div class="mod-name">Defense</div><div class="mod-lock" id="lock-def">LOCKED</div></div>
-        <div class="mod-stacks"><div class="mod-value" id="res-def">8</div><div class="mod-base" id="base-bracket-def">[8]</div></div>
-        <div class="mod-potency" id="pot-def"></div>
-        <div class="mod-stat" id="attr-def-res">Max Armor</div>
-        <div class="mod-stat-pct" id="pct-def">+4%</div>
-        <div class="mod-rate" id="rate-def">0.5% per stack</div>
+        <div class="mod-header">
+          <div class="mod-name">Defense</div>
+          <div class="mod-header-right">
+            <div class="mod-value" id="res-def">8</div>
+            <div class="mod-base" id="base-bracket-def">[8]</div>
+            <span class="mod-potency-inline" id="pot-def"></span>
+            <span class="mod-lock" id="lock-def">LOCKED</span>
+          </div>
+        </div>
+        <div id="stats-def"></div>
       </div>
       <div class="module-card utility" id="card-util">
-        <div class="mod-header"><div class="mod-name">Utility</div><div class="mod-lock" id="lock-util">LOCKED</div></div>
-        <div class="mod-stacks"><div class="mod-value" id="res-util">8</div><div class="mod-base" id="base-bracket-util">[8]</div></div>
-        <div class="mod-potency" id="pot-util"></div>
-        <div class="mod-stat" id="attr-util-res">Skill Damage</div>
-        <div class="mod-stat-pct" id="pct-util">+8%</div>
-        <div class="mod-rate" id="rate-util">1% per stack</div>
+        <div class="mod-header">
+          <div class="mod-name">Utility</div>
+          <div class="mod-header-right">
+            <div class="mod-value" id="res-util">8</div>
+            <div class="mod-base" id="base-bracket-util">[8]</div>
+            <span class="mod-potency-inline" id="pot-util"></span>
+            <span class="mod-lock" id="lock-util">LOCKED</span>
+          </div>
+        </div>
+        <div id="stats-util"></div>
       </div>
     </div>
-    <div class="bars">
-      <div class="bar-row"><div class="bar-label off" id="lbl-off">OFF 8</div><div class="bar-track"><div class="bar-fill off" id="bar-off" style="width:33%"></div></div><div class="bar-pct" id="barpct-off">33%</div></div>
-      <div class="bar-row"><div class="bar-label def" id="lbl-def">DEF 8</div><div class="bar-track"><div class="bar-fill def" id="bar-def" style="width:33%"></div></div><div class="bar-pct" id="barpct-def">33%</div></div>
-      <div class="bar-row"><div class="bar-label util" id="lbl-util">UTIL 8</div><div class="bar-track"><div class="bar-fill util" id="bar-util" style="width:33%"></div></div><div class="bar-pct" id="barpct-util">33%</div></div>
+    <div class="result-bottom">
+      <div id="active-effect-inline" style="display:none;"></div>
+      <div class="bars">
+        <div class="bar-row"><div class="bar-label off" id="lbl-off">OFF 8</div><div class="bar-track"><div class="bar-fill off" id="bar-off" style="width:33%"></div></div><div class="bar-pct" id="barpct-off">33%</div></div>
+        <div class="bar-row"><div class="bar-label def" id="lbl-def">DEF 8</div><div class="bar-track"><div class="bar-fill def" id="bar-def" style="width:33%"></div></div><div class="bar-pct" id="barpct-def">33%</div></div>
+        <div class="bar-row"><div class="bar-label util" id="lbl-util">UTIL 8</div><div class="bar-track"><div class="bar-fill util" id="bar-util" style="width:33%"></div></div><div class="bar-pct" id="barpct-util">33%</div></div>
+      </div>
     </div>
   </div>
 
@@ -555,16 +610,6 @@ function activeStats(convArr, defaultStat) {
   return convArr.length ? convArr : [defaultStat];
 }
 
-function fmtResult(val, pot, sat, conv, def) {
-  if(sat) return {attr:'⛔ stat disabled', pct:'—', rate:''};
-  const stats = activeStats(conv, def);
-  return {
-    attr: stats.map(sk=>STAT_DEFS[sk][0]).join(' + '),
-    pct:  stats.map(sk=>`+${(val*pot*STAT_DEFS[sk][1]).toFixed(1)}%`).join(' / '),
-    rate: stats.map(sk=>`${STAT_DEFS[sk][1]}%/stack`).join(' · ') + (pot>1?` · ×${pot.toFixed(1)} potency`:''),
-  };
-}
-
 function stateSig(s) {
   return `${s.off}|${s.def}|${s.util}|${s.pot_off.toFixed(2)}|${s.pot_def.toFixed(2)}|${s.pot_util.toFixed(2)}|${+s.sat_off}${+s.sat_def}${+s.sat_util}|${s.conv_off}|${s.conv_def}|${s.conv_util}`;
 }
@@ -627,7 +672,7 @@ function resetAll() {
 // ================================================================
 const buildHistory=[];
 
-function pushHistory(ids, s, fromHistory=false) {
+function pushHistory(ids, s) {
   if(ids.every(id=>id==='none')) return;
   const key=ids.join('|');
   // Never push if this exact build is already anywhere in history
@@ -667,6 +712,59 @@ function refreshDups() {
 }
 
 // ================================================================
+// ACTIVE MODIFIER EFFECTS
+// ================================================================
+function renderActiveEffects(off, def, util) {
+  const equippedId = document.getElementById('equipped').value;
+  const inline = document.getElementById('active-effect-inline');
+
+  if(equippedId === 'none') { inline.style.display = 'none'; inline.innerHTML = ''; return; }
+
+  const lvBlackout = parseInt(document.getElementById('lv-blackout').value);
+  const lvCloud    = parseInt(document.getElementById('lv-cloud').value);
+  const lvOptimize = parseInt(document.getElementById('lv-optimize').value);
+
+  const ACTIVES = {
+    blackout: {
+      name: 'Blackout Pulse', lv: lvBlackout,
+      rows: [
+        {label:'Radius',   val:`${(10 + off * 0.5).toFixed(1)}m`,          cls:'off'},
+        {label:'Cooldown', val:`${Math.max(0, 90 - def)}s`,                cls:'def'},
+      ],
+      lv5: lvBlackout >= 5 ? `Lv5 · Pulse ${(4 + util * 0.1).toFixed(1)}s` : null,
+    },
+    cloud: {
+      name: 'Cloud Armor', lv: lvCloud,
+      rows: [
+        {label:'Repair/s', val:`${(5 + def * 0.2).toFixed(1)}% · 10s`,    cls:'def'},
+        {label:'Cooldown', val:`${Math.max(0, 90 - util)}s`,              cls:'util'},
+      ],
+      lv5: lvCloud >= 5 ? `Lv5 · Blind ${(4 + off * 0.1).toFixed(1)}s` : null,
+    },
+    optimize: {
+      name: 'Optimize / Overload', lv: lvOptimize,
+      rows: [
+        {label:'CD reduction', val:`${(30 + util * 0.8).toFixed(1)}%`,    cls:'util'},
+        {label:'Cooldown',     val:`${Math.max(0, 90 - off)}s`,           cls:'off'},
+      ],
+      lv5: lvOptimize >= 5 ? `Lv5 · Overcharge ${(5 + def * 0.2).toFixed(1)}s` : null,
+    },
+  };
+
+  const a = ACTIVES[equippedId];
+  const rows = a.rows.map(r =>
+    `<div class="active-effect-row"><span class="active-effect-label">${r.label}</span><span class="active-effect-value ${r.cls}">${r.val}</span></div>`
+  ).join('');
+  const lv5 = a.lv5 ? `<div class="active-effect-lv5">${a.lv5}</div>` : '';
+
+  inline.style.display = 'block';
+  inline.innerHTML = `<div class="active-effect-card" style="border-color:var(--accent);">
+    <div class="active-effect-name">${a.name} ★</div>
+    ${rows}${lv5}
+  </div>`;
+}
+
+// ================================================================
 // CALCULATOR UPDATE
 // ================================================================
 function update() {
@@ -694,12 +792,32 @@ function update() {
    {m:'util',conv:s.conv_util,sat:s.sat_util,lock:s.lock_util,pot:s.pot_util,val:s.util,def:MOD_DEFAULT.util}
   ].forEach(({m,conv,sat,lock,pot,val,def})=>{
     document.getElementById(`res-${m}`).textContent=val;
-    document.getElementById(`pot-${m}`).textContent=pot>1?`potency ×${pot.toFixed(1)}`:'';
-    const r=fmtResult(val,pot,sat,conv,def);
-    document.getElementById(`attr-${m}-res`).textContent=r.attr;
-    document.getElementById(`pct-${m}`).textContent=r.pct;
-    document.getElementById(`rate-${m}`).textContent=r.rate;
+
+    // Potency badge
+    const potEl=document.getElementById(`pot-${m}`);
+    if(pot>1){potEl.textContent=`×${pot.toFixed(1)}`;potEl.classList.add('visible');}
+    else{potEl.textContent='';potEl.classList.remove('visible');}
+
+    // Lock badge
     document.getElementById(`lock-${m}`).classList.toggle('visible',lock);
+
+    // Stat rows
+    const statsEl=document.getElementById(`stats-${m}`);
+    if(sat){
+      statsEl.innerHTML=`<div class="mod-disabled-label">⛔ stat disabled</div>`;
+    } else {
+      const stats=activeStats(conv,def);
+      statsEl.innerHTML=stats.map(sk=>{
+        const [label,rate]=STAT_DEFS[sk];
+        const pct=(val*pot*rate).toFixed(1);
+        return `<div class="mod-stat-row">
+          <span class="mod-stat-name">${label}</span>
+          <span class="mod-stat-pct">+${pct}%</span>
+          <span class="mod-stat-rate">${rate}%/stack</span>
+        </div>`;
+      }).join('');
+    }
+
     document.getElementById(`card-${m}`).classList.toggle('mod-card-disabled',sat);
     document.getElementById(`card-${m}`).classList.toggle('active-glow',!sat&&val>base);
   });
@@ -714,9 +832,23 @@ function update() {
 
   Object.keys(flags).forEach(k=>document.getElementById(`notice-${k}`).style.display=flags[k]?'block':'none');
 
+  // Passive summary in result zone
   const ids=Array.from(document.querySelectorAll('.psel')).map(s=>s.value);
+  const summaryEl = document.getElementById('result-passives-summary');
+  const hasAny = ids.some(v => v !== 'none');
+  if (!hasAny) {
+    summaryEl.innerHTML = '<div class="result-passive-empty">No passive modifiers selected.</div>';
+  } else {
+    summaryEl.innerHTML = ids.map((id, i) => {
+      const p = PASSIVE_LIST.find(x => x.id === id);
+      if (!p || p.id === 'none') return `<div class="result-passive-row"><span class="result-passive-slot">${i+1}</span><span class="result-passive-desc">—</span></div>`;
+      return `<div class="result-passive-row"><span class="result-passive-slot">${i+1}</span><span class="result-passive-name">${p.label}</span><span class="result-passive-desc">· ${p.desc}</span></div>`;
+    }).join('');
+  }
+
   pushHistory(ids,s);
   safeReplaceState(buildHash());
+  renderActiveEffects(s.off, s.def, s.util);
 }
 
 // Populate passive selects
@@ -910,6 +1042,40 @@ function loadBuild(id1,id2,id3){
   document.getElementById('tab-btn-calculator').classList.add('active');
   update();
   window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ================================================================
+// CAPTURE
+// ================================================================
+function captureResult() {
+  const btn = document.querySelector('.icon-btn.capture');
+  const target = document.getElementById('result-capture-zone');
+  if (!target) { showToast('Nothing to capture yet.'); return; }
+
+  btn.disabled = true;
+  btn.textContent = '⏳';
+
+  html2canvas(target, {
+    backgroundColor: '#0a0a0a',
+    scale: 2,
+    useCORS: true,
+    logging: false,
+  }).then(canvas => {
+    const off  = document.getElementById('res-off').textContent;
+    const def  = document.getElementById('res-def').textContent;
+    const util = document.getElementById('res-util').textContent;
+    const filename = `recombinant-OFF${off}-DEF${def}-UTIL${util}.png`;
+    const link = document.createElement('a');
+    link.download = filename;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    showToast('Image saved!');
+  }).catch(() => {
+    showToast('Capture failed — try again.');
+  }).finally(() => {
+    btn.disabled = false;
+    btn.textContent = '📷 Save Image';
+  });
 }
 
 // ================================================================
